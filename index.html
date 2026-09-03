@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>「发明」孙子兵法 · 十三篇</title>
+<meta name="description" content="十三关，一篇一决策。打完你手上的竹简，就是你自己写的《孙子兵法》。">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f4efe4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="孙子兵法">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+:root{
+  --paper:#f4efe4; --paper2:#efe8da; --ink:#23201c; --ink2:#5a5348;
+  --zhu:#a8321e; --zhu2:#c0442c; --gold:#8a6d3b; --line:#cfc4ad;
+  --bamboo:#d8c9a6; --ok:#3d6b4a;
+  --sp: env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
+body{
+  font-family:"Songti SC","STSong","Source Han Serif SC","Noto Serif CJK SC","Noto Serif SC",Georgia,"Times New Roman",serif;
+  font-size:16px;line-height:1.75;overflow-x:hidden;
+  padding:calc(var(--sp) + 0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  background-image:radial-gradient(circle at 18% 12%,rgba(160,140,100,.10),transparent 55%),radial-gradient(circle at 82% 78%,rgba(160,140,100,.09),transparent 55%);
+}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 8px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.brand{font-size:15px;letter-spacing:.06em;color:var(--ink2);margin-right:auto;white-space:nowrap}
+@media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.seg{margin-left:auto}.seg button{padding:6px 8px}}
+.brand b{color:var(--zhu);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf8f1}
+.seg button{appearance:none;border:0;background:transparent;font:inherit;font-size:13px;color:var(--ink2);
+  padding:6px 9px;cursor:pointer;min-height:34px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--zhu);color:#fdf9f0}
+.seg button[hidden]{display:none}
+.iconbtn{appearance:none;border:1px solid var(--line);background:#fbf8f1;border-radius:3px;font:inherit;font-size:12px;
+  color:var(--ink2);padding:6px 9px;min-height:34px;cursor:pointer}
+.iconbtn:active{background:#f0e9dc}
+h1{font-size:27px;line-height:1.3;margin:24px 0 6px;letter-spacing:.02em}
+h1 .zhu{color:var(--zhu)}
+.sub{color:var(--ink2);font-size:15px;margin:0 0 18px}
+.card{background:#fbf8f1;border:1px solid var(--line);border-radius:4px;padding:16px 16px 14px;margin:14px 0;
+  box-shadow:0 1px 0 rgba(120,100,70,.06)}
+.kicker{font-size:12px;letter-spacing:.22em;color:var(--gold);text-transform:none;margin:0 0 6px}
+.chapname{font-size:22px;margin:0 0 10px;letter-spacing:.04em}
+.chapname .no{color:var(--zhu);font-size:14px;margin-right:8px;letter-spacing:.1em}
+.brief{margin:0 0 4px;white-space:pre-line}
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.opt{display:block;width:100%;text-align:left;font:inherit;background:#fdfbf6;border:1px solid var(--line);
+  border-radius:4px;padding:12px 13px;min-height:48px;cursor:pointer;color:var(--ink);transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--zhu);background:#fdf7ef}
+.opt .tag{color:var(--zhu);margin-right:8px;font-size:13px}
+.opt[disabled]{opacity:.5;cursor:not-allowed;background:#f3efe6}
+.opt[disabled]:hover{border-color:var(--line);background:#f3efe6}
+.why{display:block;margin-top:5px;font-size:12.5px;color:var(--ink2)}
+.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 4px;
+  border:1px solid var(--line);border-radius:4px;background:#fbf8f1;padding:9px 6px}
+.hud div{text-align:center}
+.hud .k{font-size:11.5px;color:var(--ink2);letter-spacing:.12em}
+.hud .v{font-size:19px;line-height:1.3}
+.hud .d{font-size:11px;height:14px;color:var(--zhu)}
+.hud .d.up{color:var(--ok)}
+.res{border-left:3px solid var(--zhu);padding:2px 0 2px 12px;margin:14px 0;white-space:pre-line}
+.tick{font-size:13px;color:var(--ink2);margin:8px 0 0}
+.tick b{color:var(--zhu);font-weight:400}
+.tick b.up{color:var(--ok)}
+textarea,input[type=text]{width:100%;font:inherit;font-size:16px;background:#fdfbf6;border:1px solid var(--line);
+  border-radius:4px;padding:11px;color:var(--ink);resize:vertical}
+textarea:focus,input:focus{outline:2px solid rgba(168,50,30,.35);outline-offset:1px}
+.sugs{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 2px}
+.sug{font:inherit;font-size:13px;background:#f2ece0;border:1px dashed var(--line);border-radius:14px;
+  padding:6px 11px;cursor:pointer;color:var(--ink2);min-height:34px}
+.sug:hover{border-color:var(--zhu);color:var(--ink)}
+.btn{appearance:none;font:inherit;font-size:15px;background:var(--zhu);color:#fdf9f0;border:0;border-radius:4px;
+  padding:12px 20px;min-height:48px;cursor:pointer;letter-spacing:.04em}
+.btn:disabled{background:#c3b8a4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--zhu);border:1px solid var(--zhu)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.compare{display:grid;grid-template-columns:1fr;gap:0;margin:12px 0;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.compare>div{padding:12px 13px}
+.compare .mine{background:#fdfbf6}
+.compare .his{background:#f2ece0;border-top:1px solid var(--line)}
+.compare .who{font-size:11.5px;letter-spacing:.16em;color:var(--gold);margin-bottom:4px}
+.compare .his .who{color:var(--zhu)}
+.yuan{font-size:17px;line-height:1.85}
+.gloss{font-size:13.5px;color:var(--ink2);margin-top:6px}
+.scroll{background:linear-gradient(90deg,#e6d7b4 0 6px,transparent 6px),linear-gradient(-90deg,#e6d7b4 0 6px,transparent 6px),
+  repeating-linear-gradient(90deg,var(--bamboo) 0 26px,#cdbb95 26px 28px);
+  border:1px solid #b9a577;border-radius:3px;padding:14px 12px;margin:14px 0}
+.slip{background:rgba(253,251,246,.86);border-radius:2px;padding:8px 10px;margin:0 0 7px;font-size:14px}
+.slip:last-child{margin-bottom:0}
+.slip .n{color:var(--zhu);font-size:12px;letter-spacing:.1em;margin-right:7px}
+.slip .s{display:block;color:var(--ink2);font-size:12.5px;margin-top:3px}
+.slip.empty{background:rgba(253,251,246,.45);border:1px dashed #a8916044;color:var(--ink2);font-style:italic}
+.mapwrap{margin:10px 0 2px;border:1px solid var(--line);border-radius:4px;background:#f7f2e6;overflow:hidden}
+svg.map{display:block;width:100%;height:auto}
+.acts{display:flex;gap:6px;margin:2px 0 10px;font-size:11.5px;color:var(--ink2);letter-spacing:.14em;flex-wrap:wrap}
+.acts span{opacity:.45}
+.acts span.on{opacity:1;color:var(--zhu)}
+.dots{display:flex;gap:5px;margin:8px 0 0;flex-wrap:wrap}
+.dots i{width:8px;height:8px;border-radius:50%;background:#ded3ba;display:inline-block}
+.dots i.done{background:var(--zhu)}
+.dots i.now{background:var(--gold);box-shadow:0 0 0 3px rgba(138,109,59,.18)}
+.end{font-size:30px;color:var(--zhu);margin:6px 0 2px;letter-spacing:.06em}
+.quiet{color:var(--ink2);font-size:13.5px}
+.hr{height:1px;background:var(--line);margin:22px 0}
+.exits{display:flex;flex-direction:column;gap:9px;margin-top:10px}
+.exits a,.exits button{display:block;text-decoration:none;text-align:left;font:inherit;font-size:14.5px;color:var(--ink);
+  background:#fdfbf6;border:1px solid var(--line);border-radius:4px;padding:12px 13px;min-height:48px;cursor:pointer}
+.exits a:hover,.exits button:hover{border-color:var(--zhu)}
+.exits small{display:block;color:var(--ink2);font-size:12.5px;margin-top:3px}
+footer{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink2);font-size:12px}
+.blind{color:var(--zhu);font-weight:600}
+canvas#share{display:none}
+.big14{font-size:20px;line-height:1.9;margin:18px 0}
+@media (max-width:420px){h1{font-size:23px}.chapname{font-size:19px}.hud .v{font-size:17px}}
+@media (display-mode:standalone){body{padding-top:calc(var(--sp) + 4px)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
+  <div class="seg" id="toneseg">
+    <button data-tone="wen" aria-pressed="false">文言</button>
+    <button data-tone="bai" aria-pressed="true">白话</button>
+    <button data-tone="hei" aria-pressed="false" hidden>黑话</button>
+    <button data-tone="en" aria-pressed="false">ENG</button>
+  </div>
+  <button class="iconbtn" id="slangbtn" title="黑话模式">黑</button>
+  <button class="iconbtn" id="installbtn" hidden>装</button>
+</header>
+<main id="app"></main>
+<footer id="foot"></footer>
+</div>
+<canvas id="share" width="1080" height="1350"></canvas>
+<script>
+/* ============================================================
+   「发明」孙子兵法 · 十三篇   v1
+   四档语气一张表：Q[key] = [文言, 白话, 黑话, ENG]
+   L.<tone> 由 Q 生成，键集恒等；t(k) 查表。
+   ============================================================ */
+var TONES=["wen","bai","hei","en"];
+var Q={};
+function q(k,w,b,h,e){Q[k]=[w,b,h,e];}
+
+/* ---------- 界面 ---------- */
+q("ui.title","「发明」孙子兵法","「发明」孙子兵法","「发明」孙子兵法","Inventing the Art of War");
+q("ui.sub","十三篇","十三篇","十三篇","The Thirteen Chapters");
+q("ui.pitch",
+ "十三关，一关一篇。每关一局、一决、一结。战罢，尔以己言志其得；而后原文乃见。十三关终，简上十三条，即尔所著之兵法也。",
+ "十三关，每关一篇。一个局面，一个决定，一次结算。打完之后，你先用自己的话写下这一仗的教训，游戏才把原文给你看。十三关走完，竹简上那十三条，就是你自己写出来的《孙子兵法》。",
+ "十三把，一把一篇。给你一个局，你只做一个决定，然后看结果。打完你先自己总结一句，之后才给你看原句。十三把打完，你面前那卷竹简上的十三条，是你自己一把一把打出来的。",
+ "Thirteen levels, one chapter each. One situation, one decision, one resolution. After each fight you write the lesson in your own words — only then does the game show you the original line. After thirteen levels the thirteen lines on your scroll are your own Art of War.");
+q("ui.rule",
+ "一篇一决策，一决策一后果。约二十刻。",
+ "一篇一决策，一决策一后果。全程约 20 分钟。",
+ "一把一个决定，一个决定一个后果。20 分钟能打完。",
+ "One chapter, one decision, one consequence. About 20 minutes end to end.");
+q("ui.begin","始","开始","开打","Begin");
+q("ui.resume","继","继续","接着打","Resume");
+q("ui.restart","更始","重来一遍","再来一把","Play again");
+q("ui.choose","择一而行","做出你的决定","你选哪个","Make your call");
+q("ui.locked","此路已绝","这条路已经走不通了","这条路早堵死了","This route is closed to you");
+q("ui.needshi","势未成","势不够","势不够，撑不起","Not enough momentum");
+q("ui.needbing","兵不足","兵力不足","人不够","Not enough troops");
+q("ui.needjian","无间可用","你手上没有可用的间谍","你没安排眼线，开不了","You have no agents in place");
+q("ui.result","是役","结果","结果","What happened");
+q("ui.writeq",
+ "以尔之言，志此役之得。",
+ "用你自己的话，写下这一仗的教训。",
+ "用你自己的话总结一句：这把学到啥了？",
+ "In your own words: what is the lesson of this fight?");
+q("ui.writeph","书于简……","写在这里……","打在这儿……","Write it here…");
+q("ui.sugs","或取此数语","不想写？点一句改改也行","懒得写就点一句，改改也行","Or take one of these and edit it");
+q("ui.write","刻之","写上竹简","刻上去","Write it on the scroll");
+q("ui.mine","尔之言","你写的","你写的","YOURS");
+q("ui.his","孙子之言","孙子写的","孙子写的","SUN TZU");
+q("ui.next","次篇","下一篇","下一把","Next");
+q("ui.scroll","简","竹简","竹简","THE SCROLL");
+q("ui.act1","庙算","庙算","庙算","COUNSEL");
+q("ui.act2","交兵","交兵","交兵","CONTACT");
+q("ui.act3","全胜","全胜","全胜","WHOLE VICTORY");
+q("ui.act4","第十四","第十四","第十四","THE FOURTEENTH");
+q("ui.liang","粮","粮","粮","GRAIN");
+q("ui.bing","兵","兵","兵","TROOPS");
+q("ui.shi","势","势","势","MOMENTUM");
+q("ui.jun","君心","君心","君心","THE KING");
+q("ui.intel","敌情","敌情","对面情况","THE ENEMY");
+q("ui.intel.tpl","敌众 {n} 万，粮支 {m} 月，其将 {c}","敌军 {n} 万，粮草够 {m} 个月，敌将 {c}","对面 {n} 万人，粮撑 {m} 个月，他们主将 {c}","{n}0,000 men · {m} months of supply · their general is {c}");
+q("ui.intel.fog","不可知","不明","不知道","unknown");
+q("ui.gen.jiao","骄","骄横自大","飘了，觉得自己天下第一","arrogant");
+q("ui.gen.jin","谨","谨慎多疑","很稳，不轻易动","cautious");
+q("ui.gen.nu","躁","性急易怒","脾气爆，一激就上头","hot-tempered");
+q("ui.gen.tan","贪","贪利","见利就冲","greedy");
+q("ui.gen.qie","怯","畏战","怂，不敢打","timid");
+q("ui.blindnote",
+ "尔未尝算，故敌情终局皆晦。",
+ "你没算过，所以这一局你看不见敌情。",
+ "你开局没看对面阵容，这把你就是瞎的。",
+ "You never made the calculation, so the enemy stays dark to you.");
+q("ui.slang.on","黑话已启","黑话模式已打开","黑话开了","Slang mode on");
+q("ui.slang.off","黑话已闭","黑话模式已关闭","黑话关了","Slang mode off");
+q("ui.install","安","装到桌面","装到桌面","Install");
+q("ui.time","历时","用时","用时","Time");
+q("ui.min","刻","分","分","min");
+q("ui.sec","息","秒","秒","s");
+q("ui.share","制简为图","生成分享卡","出图分享","Make a share card");
+q("ui.shared","图已成，见下载","分享卡已下载","图下好了","Card downloaded");
+q("ui.exit1","欲观他人所书第十四条乎？","想看别人写的第十四条？","想看别人写的第十四条？","Want to read other people's fourteenth rule?");
+q("ui.exit1s","留一书信，成墙之日相告。","留个邮箱，第十四条墙做出来时告诉你。","留个邮箱，墙做好了叫你。","Leave your email; we will write when the wall is up.");
+q("ui.exit2","用之于讲堂","把它用在你的课堂上","拿去当教案","Use this in your classroom");
+q("ui.exit2s","课堂、书院、博物馆皆可，来书言其用。","学校、书院、博物馆都可以，写信说说你的场景。","学校博物馆都行，说说你想咋用。","Schools, study groups, museums. Tell us how you would use it.");
+q("ui.exit3s","十三条、四数、结局、并尔之第十四条。","带上你的十三条、四项终值、结局代号和你写的第十四条。","带你的十三条、四个数、结局和你的第十四条。","Your thirteen lines, the four final numbers, the ending, and your fourteenth rule.");
+q("ui.finalq","谁为尔加此第十四条？","那么，是谁给你加的第十四条？","那么，你这第十四条，是谁给你加的？","So — who added your fourteenth rule?");
+q("ui.write14","书尔之第十四条。","写下你自己的第十四条。","写下你自己的第十四条。","Write your own fourteenth rule.");
+q("ui.ph14","第十四曰……","第十四条：……","第十四条：……","The fourteenth rule is…");
+q("ui.done14","已刻","已刻上","刻上了","Written");
+q("ui.noanswer",
+ "此局不与尔答。",
+ "这个游戏不给答案。",
+ "这游戏不给标准答案。",
+ "This game will not answer that for you.");
+q("ui.foot",
+ "《孙子兵法》原文、《史记》并 Giles 一九一〇年英译，皆公版。白话、黑话、英文旁白，本作自撰。",
+ "《孙子兵法》原文、《史记》、Giles 1910 英译均为公有领域。白话 / 黑话 / 英文旁白由本作自行撰写。",
+ "原文、《史记》、Giles 1910 英译都是公版。白话黑话英文这些话是我们自己写的。",
+ "Sun Tzu, the Shiji, and the Giles 1910 translation are public domain. All modern-language copy here is original to this game.");
+
+/* ---------- 幕一 · 庙算 ---------- */
+q("s1.chap","始计","始计","始计","Laying Plans");
+q("s1.brief",
+ "君召尔于庙。曰：邻国可伐否？群臣皆言可。今日须有一言。",
+ "君主把你叫到庙堂上。他问：邻国这一仗，能打吗？满朝文武都说能打。今天必须给个话。",
+ "老板把你叫进会议室，问下一把能不能开。屋里所有人都说能开。现在轮到你表态。",
+ "The king summons you to the ancestral hall. Can we attack our neighbour? The whole court says yes. He wants your answer today.");
+q("s1.a","立刻应承：可伐。","当场应下：这仗能打。","直接说：能开，稳的。","Say yes at once: we can take them.");
+q("s1.b","请先算五事七计。","先别答，让我算过五事七计再说。","先看看两边的阵容和数据再回话。","Ask for time: let me first weigh the five factors and seven comparisons.");
+q("s1.c","谏曰：不可伐。","劝谏：这仗不该打。","劝他别开：这把打不了。","Advise against it: this war should not be fought.");
+q("s1.ar",
+ "君悦，赐尔节钺。然尔未尝算，敌之众寡强弱、将之能否，终局皆不可知。军行于雾中。",
+ "君主很高兴，当场把兵权给了你。但你没有算过——敌军多少人、粮草几何、主将是谁，你这一局都不会知道。你要在雾里打完这一仗。",
+ "老板很开心，权限当场给你。但你没看过对面的数据——多少人、多少资源、谁带队，这一把你都看不见。整局你是瞎着打的。",
+ "The king is delighted and hands you the tally of command. But you never made the calculation. Enemy numbers, supply, the name of their general — none of it will be visible to you for the rest of this war. You will fight it in fog.");
+q("s1.br",
+ "尔以五事七计较之：道、天、地、将、法。庙算既毕，敌之虚实、将之性情，尔皆知之。君面有不豫。",
+ "你用五事七计比了一遍：道、天、地、将、法。算完了，敌军的虚实和敌将的性子你都清楚。君主脸色不太好看——他要的是一句痛快话。",
+ "你把两边的数据拉出来对了一遍：士气、时机、地形、主将、纪律。对完之后对面什么底你都知道。老板脸不太好看——他要的是一句「稳了」。",
+ "You weigh the five factors and the seven comparisons: moral influence, weather, terrain, command, discipline. When you are done you know their strength and the temper of their general. The king's face darkens. He wanted a shorter answer.");
+q("s1.cr",
+ "尔曰不可。君默然久之，终曰：卿既言之，姑试之。国用得以稍蓄，而君心已疑。",
+ "你说不该打。君主沉默了很久，最后说：既然你这么说，那就先试试。国库因此留下了一点余地——但君主心里已经有了疙瘩。",
+ "你说这把不能开。老板沉默了半天，最后说：行吧，那就先试试。资源因此留了一手——但他记住了你这句话。",
+ "You say no. The king is silent for a long while, then: since you say so, we will only test them. Some of the treasury is spared. And something has entered the king's mind that will not leave.");
+q("s1.line",
+ "兵者，国之大事，死生之地，存亡之道，不可不察也。",
+ "打仗是国家的大事。人的生死、国的存亡都压在上面，不能不先算清楚。",
+ "开团是全队的事，输了一起没。开之前先算，别上来就喊稳。",
+ "The art of war is of vital importance to the State. It is a matter of life and death, a road either to safety or to ruin. Hence it is a subject of inquiry which can on no account be neglected. (Giles, 1910)");
+q("s1.l1","未算而战者，未战已败。","没算过就开打，等于已经输了一半。","没看数据就开，等于送。","Fighting before counting is losing before fighting.");
+q("s1.l2","答之速者，未必知之。","答得快不等于想清楚了。","答得快不代表想明白了。","A fast answer is not a considered one.");
+q("s1.l3","国之大事，不可以气决之。","国家的大事，不能靠一时的痛快来决定。","这么大的事，别凭一时上头。","Big decisions should not be made to please the room.");
+
+q("s2.chap","作战","作战","作战","Waging War");
+q("s2.brief",
+ "十万之师既出，日费千金。粮从何来？",
+ "十万大军已经出境，每天都在烧钱。粮从哪来？",
+ "十万人已经出发了，每天都在烧资源。补给从哪来？",
+ "A hundred thousand men are across the border, and every day costs a thousand pieces of gold. Where does the food come from?");
+q("s2.a","国中转运，千里馈粮。","从本国往前线运，千里转运。","全靠家里往前线运。","Haul it from home, a thousand li of convoys.");
+q("s2.b","因粮于敌。","就地取食，吃敌人的。","吃对面的，去他们那边拿。","Forage on the enemy.");
+q("s2.c","轻装疾进，赌其速胜。","轻装上阵，赌一个速胜。","轻装快攻，赌速推。","Travel light and gamble on a quick win.");
+q("s2.ar",
+ "粮虽足，然辎重塞道，师行日缓。国中亦渐困于转输。",
+ "粮是够了，但辎重把路堵死了，行军一天比一天慢。国内也开始被转运拖垮。",
+ "补给是够了，但队伍被辎重拖住，走得越来越慢，家里也被拖得难受。",
+ "You have grain. But the baggage train clogs every road and the army slows day by day, and the country behind you begins to bleed from the hauling.");
+q("s2.br",
+ "食敌一钟，当吾二十钟。粮大足。然敌民既失其食，所过之处，抗者众。",
+ "在敌境就地取粮，效率极高——吃对面一份，抵得上从家里运二十份。但敌国百姓的粮被你吃了，你走到哪，哪里的人就跟你拼命。",
+ "吃对面的资源效率是自家的二十倍，粮一下就宽裕了。代价是：你抢谁的谁跟你死磕，越往里打反抗越硬。",
+ "One cartload of the enemy's provisions is worth twenty of your own. Your stores swell. But the people whose grain you ate now fight you at every village.");
+q("s2.cr",
+ "师轻而疾，进甚速。然囊中无余，胜则大利，不胜则立困。",
+ "队伍轻，跑得快，前几关推进很顺。但你身上没有余粮：赢得快就是大赚，赢不快，第五关你就要断炊。",
+ "轻装确实快，前面推得很顺。但你手里没有存货：快就是赚，慢就崩。",
+ "Light and fast, you cover ground quickly. But there is nothing in reserve. Win soon and you win big; do not, and you will starve by the fifth chapter.");
+q("s2.line",
+ "食敌一钟，当吾二十钟。",
+ "吃敌人一石粮，抵得上从本国运二十石。",
+ "在对面拿一份资源，等于自家送二十份上来。",
+ "One cartload of the enemy's provisions is equivalent to twenty of one's own. (Giles, 1910)");
+q("s2.l1","久暴师则国用不足。","仗拖得越久，国家越撑不住。","拖得越久，家底越空。","A long campaign drains the state that pays for it.");
+q("s2.l2","取之于敌，则不困于己。","从敌人身上取，才不会把自己耗死。","能从对面拿的，就别从自家出。","Take from the enemy and you do not exhaust yourself.");
+q("s2.l3","兵贵胜，不贵久。","打仗要的是赢得快，不是打得久。","要的是快赢，不是耗。","What is valued in war is victory, not long campaigns.");
+
+q("s3.chap","谋攻","谋攻","谋攻","Attack by Stratagem");
+q("s3.brief",
+ "敌城在前，城高池深，守者三万。诸将请攻。",
+ "敌军的城摆在你面前，墙高沟深，城里三万守军。诸将请战，要打。",
+ "对面高地就在眼前，塔高血厚，里面三万人。队友都在喊：上，硬拆。",
+ "Their walled city stands in front of you. High walls, deep moat, thirty thousand inside. Your officers want to storm it.");
+q("s3.a","蚁附攻城。","强攻这座城。","硬拆这个高地。","Storm the walls.");
+q("s3.b","伐交，说其邻国以孤之。","伐交：去说服他的邻国，把他孤立起来。","伐交：把他的盟友挖过来，让他单着。","Break his alliances: talk his neighbours away from him.");
+q("s3.c","伐谋，离间其君臣。","伐谋：离间他的君臣，让这座城自己开门。","伐谋：从内部拆他，让门自己开。","Attack his plans: turn his court against his general.");
+q("s3.ar",
+ "杀士三分之一，而城不拔。此攻之灾也。伤者不复，兵额永损。",
+ "士卒死伤三分之一，城还是没拿下来。这就是强攻的代价——损掉的兵，这一局再也补不回来了。",
+ "折了三分之一的人，高地还没拆掉。这波减员是永久的，后面再也补不上。",
+ "You lose a third of your men and the city still stands. This is the calamity of assault. Those men do not come back — your strength is permanently reduced.");
+q("s3.br",
+ "邻国观望而退，敌遂孤。城中人心已摇。",
+ "邻国被你说动，收兵观望。敌人孤立了，城里的人心开始动摇。",
+ "他的盟友被你劝退了，他现在单着，城里也开始慌。",
+ "The neighbours withdraw and watch. He stands alone, and inside the walls confidence begins to go.");
+q("s3.cr",
+ "间行其中，谗其将于君。旬日，敌君召其将还，代之以庸者。城未攻而已弱。",
+ "你的人在城里散布消息，让敌国君主开始怀疑守将。十天后，守将被召回，换上了一个平庸的人。城一箭未发就弱了一半。",
+ "你的眼线在里头带节奏，把他们主将搞得不被信任。十天后主将被换掉，换上来一个菜的。一刀没砍，这个点已经软了。",
+ "Your agents work inside. Within ten days their king recalls the capable general and replaces him with a mediocrity. The city is halved without a single arrow.");
+q("s3.line",
+ "上兵伐谋，其次伐交，其次伐兵，其下攻城。",
+ "最好的打法是破他的谋划，其次是破他的外交，再次才是打他的军队；强攻城池是最下策。",
+ "最好的赢法是拆他的思路，其次是拆他的关系，再次才是硬碰硬；最后才轮到强拆高地。",
+ "The highest form of generalship is to balk the enemy's plans; the next best is to prevent the junction of the enemy's forces; the next in order is to attack the enemy's army in the field; and the worst policy of all is to besiege walled cities. (Giles, 1910)");
+q("s3.l1","攻城者，不得已而为之。","强攻是没办法时才用的办法。","硬拆是实在没辙才用的。","Assault is what you do when you have run out of better ideas.");
+q("s3.l2","不战而屈人之兵，善之善者也。","不打就让对方屈服，才是最好的赢法。","不动手就让对面认输，那才是真赢。","To subdue the enemy without fighting is the highest skill.");
+q("s3.l3","损己以拔一城，不为胜。","拿自己的兵去换一座城，不算赢。","拿队伍去换一个点，不叫赢。","A city bought with your own army is not a victory.");
+
+q("s4.chap","军形","军形","军形","Tactical Dispositions");
+q("s4.brief",
+ "敌军营垒不整，旌旗乱，若可乘。此伪也。诸将请击。",
+ "敌军营地看上去乱了：旗子歪着，队列不整，像是有机可乘。（那是装的。）诸将请战。",
+ "对面看着露了个大破绽，阵型散了，像是能打。（是钓鱼的。）队友都在喊上。",
+ "Their camp looks ragged — banners crooked, ranks loose, an opening. (It is bait.) Your officers want to go.");
+q("s4.a","即出击。","立刻出击。","直接冲。","Attack now.");
+q("s4.b","固垒自守，以待其变。","加固营垒，守着，等。","不动，先把自己守稳，等他先出问题。","Fortify, hold, and wait.");
+q("s4.c","以轻骑试之。","派一小队去试探。","派个人去探一下。","Probe it with a light detachment.");
+q("s4.ar",
+ "伏发于两翼，前军陷之。既知其伪，已失士卒矣。",
+ "两翼伏兵齐出，你的前军陷进去了。等你看明白那是假的，人已经折进去了。",
+ "两边草里全是人，先头部队直接被包了。等你反应过来是假的，人已经没了。",
+ "The ambush closes from both flanks and your vanguard is caught. By the time you see the trap, the men are gone.");
+q("s4.br",
+ "尔不动。敌待之数日，粮渐匮，其部自乱。先为不可胜者，此也。君使者三至，问：何不战？",
+ "你不动。敌军等了几天，粮开始紧，他们自己的阵脚先乱了。你先让自己不可能输，再等他露出真的破绽。君主的使者来了三趟，一趟比一趟难看：你怎么还不打？",
+ "你不动。对面等了几天，资源见底，自己先乱了。你先让自己不可能输，再等他真的漏。老板派人来问了三次：你怎么还不打？",
+ "You do not move. They wait for you, their supplies tighten, and their own order begins to go. You made yourself unbeatable first, and let the opening come. Three messengers arrive from the king. Each asks the same question: why are you not fighting?");
+q("s4.cr",
+ "轻骑触之而还，伏见其形。少损，得其实。",
+ "试探的小队碰了一下就撤，伏兵露了形。折了一点人，但你看清了。",
+ "派人碰了一下就撤，把埋伏的人钓出来了。亏了一点，但看清了。",
+ "The probe touches and withdraws; the ambush shows itself. A small loss, and now you know.");
+q("s4.line",
+ "先为不可胜，以待敌之可胜。不可胜在己，可胜在敌。",
+ "先把自己弄到打不败，再等敌人露出可以被打败的地方。前一半在你手里，后一半在他手里。",
+ "先让自己没法被打死，再等对面自己失误。前半段你能控，后半段控不了。",
+ "The good fighters of old first put themselves beyond the possibility of defeat, and then waited for an opportunity of defeating the enemy. To secure ourselves against defeat lies in our own hands, but the opportunity of defeating the enemy is provided by the enemy himself. (Giles, 1910)");
+q("s4.l1","可胜在敌，不可强求。","能不能赢在对方，急不来。","赢的机会在对面手里，急也没用。","The opening is theirs to give. You cannot force it.");
+q("s4.l2","不战而无咎，愈于战而有损。","不打而无过，好过打了却有损失。","不打不亏，好过打了亏。","Not fighting and losing nothing beats fighting and losing men.");
+q("s4.l3","催战者不任其败。","催你打的人，不承担打输的后果。","催你上的人，不背输的锅。","The people urging you to fight do not carry the defeat.");
+
+q("s5.chap","兵势","兵势","兵势","Energy");
+q("s5.brief",
+ "两军接于野。正兵已合，如何取胜？",
+ "两军在野地里正面接上了。主力已经顶上，接下来怎么赢？",
+ "正面已经接上了，双方在中路顶着。接下来怎么赢？",
+ "The two armies have met in the open. Your main body is engaged. How do you win?");
+q("s5.a","悉众而前。","全军压上去。","全员压上。","Throw everything forward.");
+q("s5.b","正合而奇胜：正面持之，别遣一军绕出其后。","正面顶住，另派一支绕到他背后。","正面顶住，分一队从侧面绕后。","Hold in front, send a detachment around behind.");
+q("s5.c","悉众绕其后。","全军绕后，正面放空。","全员绕后，正面不管了。","Take the whole army around the flank.");
+q("s5.ar",
+ "众合于一处，力虽厚而无变。相持而两伤，胜负未分。",
+ "全军挤在一个方向，力气是足，但没有变化。硬顶硬，两边都伤，胜负还是不分。",
+ "全员挤在一条路上，输出是有，但没有第二手。对拼下来两边都残，还是没分出来。",
+ "Everything in one place: weight without variation. You grind, they grind, both bleed, nothing is decided.");
+q("s5.br",
+ "正面持之，奇兵出其后，敌阵遂溃。凡战者，以正合，以奇胜。此后数篇，奇兵犹可再用。",
+ "正面咬住，绕后那一支从背后捅进去，敌阵散了。这一手「分出一支去做别的事」，后面几关你还会用到。",
+ "正面顶住，绕后那一队从背后捅进去，对面直接崩。这套「分一队去干别的」的手，后面还要用好几次。",
+ "The front holds, the flanking force strikes from behind, their line breaks. This move — detaching a part to do something else — you will use again.");
+q("s5.cr",
+ "正面既虚，敌乘之而入。绕出者未至，中军已陷。",
+ "正面空了，敌人顺势直插进来。你绕后的部队还没到位，中军已经垮了。",
+ "正面没人，对面直接从中路推进来。你绕后的还没到，家已经被拆了。",
+ "The centre is empty and they walk into it. Your flanking column has not arrived; your middle is already broken.");
+q("s5.line",
+ "凡战者，以正合，以奇胜。治众如治寡，分数是也。",
+ "打仗都是用正兵接住，用奇兵取胜。带十万人像带十个人一样顺，靠的是编制分得清楚。",
+ "打架都是正面先接住，靠一支偏师赢。人多也能指挥得动，靠的是分工清楚。",
+ "In all fighting, the direct method may be used for joining battle, but indirect methods will be needed in order to secure victory. The control of a large force is the same in principle as the control of a few men: it is merely a question of dividing up their numbers. (Giles, 1910)");
+q("s5.l1","正不可无，奇不可少。","正面不能空，奇兵不能没有。","正面不能没人，也得留一手偏的。","Neither the direct nor the indirect can be left out.");
+q("s5.l2","全力压上，是没有第二手。","把全部力气压在一处，就是没有第二手。","一次压完，就没有后手了。","All-in means no second move.");
+q("s5.l3","胜在分，不在多。","赢在分得开，不在人多。","赢在分工，不在人多。","Victory is in the division, not in the numbers.");
+
+/* ---------- 幕二 · 交兵 ---------- */
+q("s6.chap","虚实","虚实","虚实","Weak Points and Strong");
+q("s6.brief",
+ "敌坚壁不出，尔欲战而不得。如之何？",
+ "敌军缩在营里不出来，你想打打不着。怎么办？",
+ "对面缩在塔下不出来，你想打打不到。怎么办？",
+ "They will not come out. You want a battle and cannot get one. What now?");
+q("s6.a","逐之。","追着他打，逼他出来。","追着他打，逼他出来。","Chase them.");
+q("s6.b","攻其所必救。","去打他不得不救的地方，让他自己出来。","去拆他不得不回来守的东西。","Strike what he cannot afford to lose.");
+q("s6.c","按兵不动，待其自出。","按兵不动，等他自己出来。","不动，等他自己出来。","Sit still and wait for him.");
+q("s6.ar",
+ "敌退而尔进，敌进而尔退，师劳于道。致于人者，此也。",
+ "他退你进，他进你退，你的队伍在路上被溜来溜去。这就是被别人牵着走。",
+ "他走你追，他回你退，你被他遛了一路。这就是节奏在对面手里。",
+ "They pull back, you follow; they turn, you pull back. Your army wears out on the road. This is being moved by the enemy.");
+q("s6.br",
+ "尔举兵向其粮所。敌不得已而出。战地既由尔定，先至而待之。致人而不致于人。",
+ "你带兵直扑他的粮仓。他不出来不行。于是战场是你选的，时间是你定的，你先到，他后到。这叫牵着别人走，而不是被别人牵着走。",
+ "你直接去拆他必须守的东西。他不出来不行。地点你定、时间你定，你先到位等他。节奏拿回来了。",
+ "You march on his granaries. Now he must come out. The ground is yours, the hour is yours; you arrive first and wait. You move him, and are not moved.");
+q("s6.cr",
+ "两军相持，日久无功。粮耗于无事之日。",
+ "两边就这么耗着，什么也没发生。粮却在这些什么也没发生的日子里照样掉。",
+ "双方就这么僵着，啥也没发生。资源照掉。","Both sit. Nothing happens. Your grain goes down anyway on the days nothing happens.");
+q("s6.line",
+ "致人而不致于人。我专而敌分。",
+ "要让敌人跟着你走，而不是你跟着他走。你集中，他分散。",
+ "节奏要在你手里，不能被对面牵着。你聚，他散。",
+ "Whoever is first in the field and awaits the coming of the enemy will be fresh for the fight. Therefore the clever combatant imposes his will on the enemy, but does not allow the enemy's will to be imposed on him. (Giles, 1910)");
+q("s6.l1","攻其所必救，则不召而自来。","打他必须救的地方，不用叫他，他自己就来了。","去拆他必须守的，他自己就出来了。","Strike what he must save, and he comes to you uninvited.");
+q("s6.l2","追者常在人后。","追着别人跑的，永远慢一步。","一直追人的，永远慢一手。","Whoever chases is always a step behind.");
+q("s6.l3","择战地者胜。","能选战场的人赢。","能选战场的人赢。","The one who chooses the ground wins.");
+
+q("s7.chap","军争","军争","军争","Maneuvering");
+q("s7.brief",
+ "前有隘口，得之则制两道。敌亦趋之，相去百里。",
+ "前面有个关隘，谁拿到谁就能卡住两条路。敌人也在往那边赶，双方距离一百里。",
+ "前面有个关键点，谁占谁就卡住两条路。对面也在赶过来，距离一样远。",
+ "A pass lies ahead. Whoever holds it controls two of the three roads. They are marching for it too, a hundred li away.");
+q("s7.a","弃辎重，昼夜疾趋。","丢下辎重，全军昼夜急行。","扔掉补给，全员急行军抢点。","Abandon the baggage and force-march day and night.");
+q("s7.b","全军并进。","全军一起赶过去。","全员一起赶过去。","Move the whole army together.");
+q("s7.c","分兵：以精锐先行，余者继之。","分兵：精锐先走一步，其余的随后跟上。","分兵：先派一队精锐去抢，剩下的慢慢跟。","Detach: send the picked troops ahead, the rest follow.");
+q("s7.ar",
+ "疾行三日而至，隘口既得。然辎重尽弃，军无辎重则亡。粮大耗。",
+ "急行三天，关隘拿下了。但辎重全丢了——军队没有辎重就活不下去，粮大跌。",
+ "急行军三天，点是抢到了。但补给全扔了，队伍没补给撑不住，粮掉得厉害。",
+ "Three days of forced marching and the pass is yours. But the baggage is gone, and an army without its baggage is lost. Your stores collapse.");
+q("s7.br",
+ "百里而争利，则擒三将军：劲者先，疲者后，十一而至。至者不能守。",
+ "百里去抢一个便宜，三个将军都要被人擒了：强的先到，弱的落后，十个人里只到得了一个。到了也守不住。",
+ "跑一百里去抢点，队伍直接被拉成一条线：快的先到，慢的还在路上，十个人到一个。到了也守不住。",
+ "If you march a hundred li to snatch an advantage, the leaders of all three divisions will fall into the enemy's hands. The strong arrive first, the weak straggle, and only one man in ten comes up. Those who arrive cannot hold it.");
+q("s7.cr",
+ "精锐先据其隘，余军继至。以迂为直，以患为利。隘口既固。",
+ "精锐先占住关隘，大队随后到位。绕的路成了直路，累赘成了便宜。关隘拿稳了。",
+ "精锐先卡住点，大部队随后接上。绕的那点路反而成了优势，点稳住了。",
+ "The picked troops seize the pass; the rest come up behind them. The long way round became the short way; the burden became the advantage. The pass holds.");
+q("s7.lock",
+ "尔既千里馈粮，辎重塞道，疾趋不可为也。",
+ "你在第二篇选了从本国转运——辎重把路堵着，「轻装急行」这条路你根本走不了。",
+ "你开局选了全靠家里补给，队伍被辎重拖着，「轻装急行」这个选项你开不出来。",
+ "You chose to haul supply from home. The baggage train blocks the road; the forced march is not available to you.");
+q("s7.line",
+ "军争之难者，以迂为直，以患为利。军无辎重则亡，无粮食则亡，无委积则亡。",
+ "争地最难的地方，是把绕远变成近路，把不利变成有利。军队没有辎重会亡，没有粮会亡，没有储备会亡。",
+ "抢点最难的是：怎么把绕路变成更快，把麻烦变成优势。队伍没补给就是死。",
+ "Maneuvering with an army is advantageous; with an undisciplined multitude, most dangerous. The difficulty of tactical maneuvering consists in turning the devious into the direct, and misfortune into gain. We may take it then that an army without its baggage-train is lost; without provisions it is lost; without bases of supply it is lost. (Giles, 1910)");
+q("s7.l1","争地者，先谋其后路。","抢地方之前，先想好后路。","抢点之前先想好回撤和补给。","Before you take ground, work out how you will keep it.");
+q("s7.l2","以迂为直。","有时候绕的那条才是快的。","有时候绕的那条反而快。","The long way round can be the short way.");
+q("s7.l3","早一日之择，定后日之路。","早几关的一个选择，决定你后面还有没有路。","前面一个选择，决定你后面还有没有选项。","A choice made early decides which choices you still have later.");
+
+q("s8.chap","九变","九变","九变","Variation in Tactics");
+q("s8.brief",
+ "敌据山而营，恃险不下。相持已旬日。",
+ "敌军在山上扎营，占着地利就是不下来。已经耗了十来天。",
+ "对面守在高地上不下来，已经僵了十几天。",
+ "They are camped on the high ground and will not come down. Ten days of stalemate.");
+q("s8.a","仰攻其营。","仰攻，冲上去打。","仰攻，直接冲高地。","Attack uphill.");
+q("s8.b","断其粮道，围而不攻。","切断他的粮道，围着但不打。","断掉他的补给线，围着不打。","Cut his supply road and surround without attacking.");
+q("s8.c","遗之巾帼以辱之，激其下战。","送去女子的头巾，羞辱他，激他下山来打。","按诸葛亮那套，送头巾羞辱他，激他下来。","Send him a woman's headdress to shame him into coming down.");
+q("s8.ar",
+ "仰攻者，逆势也。矢石自上而下，士卒多死于坡。",
+ "从下往上打是逆着势打。箭和石头从上面砸下来，人多半死在坡上。",
+ "从下往上打是逆风局。对面从高处砸下来，人基本折在坡上。",
+ "Uphill is against the grain. Arrows and stones come down; most of your men die on the slope.");
+q("s8.br",
+ "绝其运道，围而不击。半月，敌自下。城有所不攻，地有所不争。",
+ "掐断他的补给，围着不打。半个月后，他自己下来了。有的城不必攻，有的地不必争。",
+ "把他补给切了，围着不打。半个月后他自己下来了。有的点不用抢，有的架不用打。",
+ "You cut the road and simply wait. In half a month they come down on their own. There are cities that need not be attacked and ground that need not be contested.");
+q("s8.cr1",
+ "尔尝算其将矣，知其性躁。巾帼既至，其将怒，弃险而下，遂败之。",
+ "你在第一篇算过敌将的性子，知道他性急。头巾一送到，他真的怒了，扔下地利冲下来，被你打垮。",
+ "你开局看过对面主将什么脾气，知道他一激就上头。东西一送到，他真的下来了，直接被你打崩。",
+ "You weighed their general in the first chapter and knew his temper. The headdress arrives, he rages, abandons the high ground, and is beaten.");
+q("s8.cr0",
+ "尔未尝算其将，不知其性。其将笑而受之，戴之巡营，士气反振。",
+ "你没算过敌将的性子，不知道他吃不吃这套。结果他笑着收下，戴着在营里走了一圈，他那边士气反而涨了。",
+ "你没看过对面主将什么人，不知道他吃不吃这套。他笑着收了，戴上在营里溜了一圈，对面士气还涨了。",
+ "You never took his measure. He accepts the gift with a laugh, wears it through his camp, and his men cheer.");
+q("s8.note",
+ "史载诸葛亮遗司马懿巾帼，欲激之战；懿不出。激将者，恃知其人耳。",
+ "史书上诸葛亮送司马懿头巾，就是想激他出战；司马懿没上当。激将法能不能用，全看你了不了解这个人。",
+ "历史上诸葛亮给司马懿送过头巾想激他，人家不接招。激将这套灵不灵，全看你有没有摸过对面的底。",
+ "Zhuge Liang once sent Sima Yi a woman's headdress to goad him into battle. Sima Yi did not come out. Provocation works only on a man you have already measured.");
+q("s8.line",
+ "途有所不由，军有所不击，城有所不攻，地有所不争，君命有所不受。",
+ "有的路不走，有的军不打，有的城不攻，有的地不争，有的君命不接。",
+ "有的路不走，有的仗不打，有的点不抢，有的命令不接。",
+ "There are roads which must not be followed, armies which must not be attacked, towns which must not be besieged, positions which must not be contested, commands of the sovereign which must not be obeyed. (Giles, 1910)");
+q("s8.l1","不打，也是一种打法。","不打，本身就是一种打法。","不打也是一种打法。","Not attacking is also a way of attacking.");
+q("s8.l2","激人者，先知其人。","要激一个人，先得了解他。","想激对面，先得摸过他的底。","To provoke a man you must first know him.");
+q("s8.l3","变者，因敌而变，不因己意。","所谓变，是随敌人变，不是随自己心情变。","随对面的情况变，不是随自己心情变。","Variation follows the enemy, not your mood.");
+
+q("s9.chap","行军","行军","行军","The Army on the March");
+q("s9.brief",
+ "日暮当营。前有洼地近水，取汲甚便；侧有向阳之高处，稍远。又：一卒疽发，痛甚，其众视之。",
+ "天黑要扎营。眼前有块低洼地，靠着水，取水方便；旁边一处向阳的高地，远一点。另外：有个士兵背上生了疮，疼得厉害，周围人都在看着你。",
+ "天黑要扎营。眼前一块低洼地，靠水，方便；旁边有个向阳高地，远一点。另外有个兵伤口感染了，疼得不行，周围人都在看你怎么处理。",
+ "Camp must be made. There is low ground by the water, convenient; and a sunlit rise a little further off. Also: one of your soldiers has an abscess and is in bad pain. The others are watching you.");
+q("s9.a","就洼地近水而营，图便。","图方便，就在低洼近水处扎营。","图方便，就在低地水边扎。","Camp low, by the water. It is convenient.");
+q("s9.b","营于向阳之高处。","扎在向阳的高处。","扎在向阳的高地。","Camp high, on the sunlit side.");
+q("s9.c","营于高处；且亲为之吮其疽。","扎在向阳高处；并且亲自替那个士兵把脓吸出来。","扎在高地；顺手亲自给那个兵处理伤口。","Camp high — and suck the pus from the soldier's wound yourself.");
+q("s9.ar",
+ "取水甚便。然湿气蒸郁，蚊蚋滋生，未战而病者日众。",
+ "取水确实方便。但低洼潮湿，蚊虫多，还没开打，病倒的人一天比一天多。",
+ "取水是方便。但低地潮湿，蚊虫多，还没开打就开始有人倒下，非战斗减员。",
+ "The water is close. But the damp rises, the insects come, and men start going down before any fighting begins.");
+q("s9.br",
+ "凡军好高而恶下，贵阳而贱阴，养生处实，军无百疾。营既定，士卒无恙。",
+ "军队都该扎在高处、向阳、水草便利而地势坚实的地方，这样才不生病。营立好了，士卒无恙。",
+ "扎营就该选高地、向阳、地实的地方，这样队伍不容易出问题。营扎好了，人没事。",
+ "An army prefers high ground to low, sunlight to shade. Camp where the men can live well and stand on firm ground, and the army will be free of disease. The camp is made and the men are well.");
+q("s9.cr",
+ "营既定。尔跪而吮其疽。军中皆见之。是夜，帐外语曰：将军尝为吾吮疽，吾以死报之。",
+ "营扎好了。你当着全军的面跪下去，把那个士兵的脓吸了出来。当天夜里，帐外有人说：将军替我吸过疮，我这条命是他的。",
+ "营扎好了。你当着所有人的面给那个兵处理了伤口。当天晚上帐外就有人说：将军给我吸过疮，我这条命给他了。",
+ "The camp is made. In front of everyone you kneel and draw the pus from the wound. That night, outside your tent, a voice: the general did that for me. I will die for him.");
+q("s9.hist",
+ "《史记》载：吴起为卒吮疽，卒母闻而哭。人问之，母曰：往年吴公吮其父，其父战不旋踵，遂死于敌。今又吮其子，妾不知其死所矣。",
+ "《史记》里记着：吴起替一个士兵吸脓，那个士兵的母亲听说以后哭了。别人问她哭什么，她说：当年吴公也替他父亲吸过，他父亲打起仗来头都不回，死在阵上。现在又替我儿子吸——我不知道我儿子会死在哪里了。",
+ "《史记》里有一段：吴起给一个兵吸脓，那个兵的妈听说之后哭了。人家问她哭啥，她说：当年吴起也给他爸吸过，他爸打仗从来不回头，死在外面了。现在轮到我儿子——我已经知道他会死在哪儿了。",
+ "From the Shiji: Wu Qi sucked the pus from a soldier's wound. When the soldier's mother heard of it, she wept. Asked why, she said: years ago Lord Wu did the same for his father, and his father went into battle and never turned back, and died there. Now he has done it for my son. I do not know where my son will die.");
+q("s9.line",
+ "视卒如爱子，故可与之俱死。",
+ "把士兵当自己的孩子看，他们才肯跟你一起去死。",
+ "把队友当自己人，人家才肯跟你一起上。",
+ "Regard your soldiers as your children, and they will follow you into the deepest valleys; look on them as your own beloved sons, and they will stand by you even unto death. (Giles, 1910)");
+q("s9.l1","善待士卒者，得其死力。","对士兵好的人，能换来他们的死力。","对人好，人才肯给你拼。","Treat men well and they will spend themselves for you.");
+q("s9.l2","恩者，亦所以用人也。","恩情也是一种用人的手段。","对人好这件事，本身也是一种手段。","Kindness is also a way of using people.");
+q("s9.l3","择地而营，胜于择地而战。","会选扎营的地方，比会选打仗的地方还重要。","会选驻扎的位置，比会选打架的位置更重要。","Choosing where to camp matters more than choosing where to fight.");
+
+q("s10.chap","地形","地形","地形","Terrain");
+q("s10.brief",
+ "行至圮地，泥淖数十里，车马难行。日且暮。",
+ "队伍走到一片沼泽地，几十里烂泥，车马难行。天快黑了。",
+ "队伍走进一片沼泽，几十里烂泥，走不快。天快黑了。",
+ "The road enters marsh — dozens of li of mud, hard going for carts and horses. Dusk is coming.");
+q("s10.a","止而休整，明日再行。","停下来休整，明天再走。","停下休整，明天再走。","Halt and rest; move on tomorrow.");
+q("s10.b","疾行过之。","连夜快速穿过去。","连夜穿过去。","Push straight through.");
+q("s10.c","绕行。","绕远路走。","绕路。","Go around.");
+q("s10.ar",
+ "止于圮地，进退皆难。夜有惊，士卒陷于泥中者众。",
+ "在沼泽里停下来，进也难退也难。夜里一有惊动，陷在泥里的人就多了。",
+ "在沼泽里停下来，进退都难。夜里一乱，陷在泥里的人一大片。",
+ "You halt in the marsh, where neither advance nor retreat is easy. Something startles the camp in the night and men are lost in the mud.");
+q("s10.br",
+ "圮地则行。夜半而出，师全。",
+ "圮地就该走，不该停。半夜出了沼泽，队伍是全的。",
+ "烂地就该赶紧过去，不能停。半夜出来了，人没大损。",
+ "In difficult ground, keep moving. You are out by midnight with the army intact.");
+q("s10.cr",
+ "绕行三日，师疲粮耗，而失其先。",
+ "绕了三天，人累粮耗，先机也没了。",
+ "绕了三天，人累资源掉，节奏也丢了。",
+ "Three days around. The men are tired, the stores are down, and the initiative is gone.");
+q("s10.obs",
+ "又：六军之状如左。走、弛、陷、崩、乱、北，凡此六者，非天之灾，将之过也。",
+ "另外：你巡视了六支部队。走（一触即溃）、弛（兵强将弱）、陷（将强兵弱）、崩（副将怨怒不服）、乱（将无威信）、北（以少击众而不量力）——这六种败法，都不是天灾，是将领的错。",
+ "另外你巡了六支队伍：一碰就散的、兵强指挥弱的、指挥强兵弱的、副手不服的、没威信压不住的、明知打不过还硬上的。这六种崩法都不怪运气，怪带队的。",
+ "You inspect six units. Flight, insubordination, collapse, ruin, disorganisation, rout — these six are not calamities from heaven. They are the general's fault.");
+q("s10.line",
+ "夫地形者，兵之助也。料敌制胜，计险厄远近，上将之道也。凡此六者，败之道也。",
+ "地形是打仗的帮手。判断敌情、算清险易远近，这是上将的本事。前面那六种，都是自取灭亡的路。",
+ "地形是帮手。看清对面、算清路况远近，这是带队的基本功。那六种崩法，都是自己作的。",
+ "The natural formation of the country is the soldier's best ally; but a power of estimating the adversary, of controlling the forces of victory, and of shrewdly calculating difficulties, dangers and distances, constitutes the test of a great general. (Giles, 1910)");
+q("s10.l1","地形者，兵之助，非兵之主。","地形是帮手，不是主角。","地形是加成，不是主角。","Terrain helps. It does not fight for you.");
+q("s10.l2","败非天灾，将之过也。","打败仗多半不是运气不好，是带兵的人有问题。","输了多半不是运气，是带队的问题。","Defeat is rarely bad luck. It is usually the commander.");
+q("s10.l3","当行则行，当止则止。","该走的地方就得走，该停的地方才停。","该走就走，该停才停。","Move where you must move; stop only where you may stop.");
+
+q("s11.chap","九地","九地","九地","The Nine Situations");
+q("s11.brief",
+ "尔已入重地，四面见敌旗。围三面而阙其一，缺口在东，无人守之。此死地也。",
+ "你已经深入敌境，四面都是敌旗。他们围了三面，东边留了一个缺口，没人守。这是死地。",
+ "你已经深到对面地盘了，四面都是人。他们围了三面，东边空着一个口，没人守。这是死地。",
+ "You are deep in their country and their banners are on every side. They have closed three sides and left one open — the east, unguarded. This is desperate ground.");
+q("s11.a","自缺口出。","从那个缺口突围。","从那个空口撤出去。","Break out through the gap.");
+q("s11.b","塞其缺口，示士卒以必死，死战。","把缺口自己堵死，告诉全军没有退路，死战。","把那个口自己堵上，告诉所有人没退路，死磕。","Block the gap yourself, show the men there is no way out, and fight.");
+q("s11.c","分兵：一军出缺口，一军留战。","分兵：一半从缺口出去，一半留下来打。","分兵：一半从口撤，一半留下打。","Split: half out through the gap, half stays and fights.");
+q("s11.ar",
+ "围师必阙，此敌之谋也。既出，两翼夹之于隘，行列既散，不可复收。死者过半。",
+ "「围三阙一」本来就是敌人的计——那个口是留给你钻的。你一钻出去，队伍在隘道里被两翼夹住，队形一散就再也收不拢。折了一半以上。",
+ "「留一个口」本来就是钓你的。你一从那儿走，队伍在窄路上被两边包夹，阵型一散就收不回来。折了一半多。",
+ "Leaving one side open is their plan, not their mistake. Once you are in the defile both flanks close, the column comes apart, and it cannot be gathered again. More than half are lost.");
+q("s11.br1",
+ "尔塞其阙，焚舟破釜。士卒无所往，则死斗。投之亡地然后存，陷之死地然后生。围者反溃。",
+ "你亲手把缺口堵死，烧了船砸了锅。人无处可去，就只能拼命。把队伍扔进亡地，它反而活下来；陷进死地，它反而生还。围你的人反而先崩了。",
+ "你自己把那个口堵上，退路全断。人没地方去，只能死磕。把队伍逼到绝路上，它反而活了。围你的那帮人先崩了。",
+ "You block the gap with your own hands and burn the boats. With nowhere to go the men fight. Throw them where there is no way out and they will survive; put them in a hopeless place and they will come through. It is the encircling army that breaks.");
+q("s11.br0",
+ "尔塞其阙而斗。然兵既寡且疲，力不能久。围者不动，而尔先竭。",
+ "你堵死缺口，死战。但你的兵已经太少太疲——前面几篇折损的人，这里补不回来。力气撑不到最后，围你的人没动，你先垮了。",
+ "你把口堵了，硬磕。但人太少太疲了——前面折的人这会儿补不回来。撑不住，对面还没动你先崩了。",
+ "You block the gap and fight. But there are too few of you and they are too tired — what you spent in the earlier chapters cannot be recalled here. They do not even have to move. You give out first.");
+q("s11.cr",
+ "分兵而斗，则两处皆不足。出者被夹，留者不支。",
+ "分兵之后，两边都不够用。出去的被夹住，留下的顶不住。",
+ "一分兵，两边都不够。出去的被包，留下的顶不住。",
+ "Split, and neither half is enough. Those who leave are caught; those who stay cannot hold.");
+q("s11.line",
+ "投之亡地然后存，陷之死地然后生。夫众陷于害，然后能为胜败。",
+ "把军队投进没有退路的地方，它才能活下来；逼进死地，它才能生还。人只有陷在危险里，才谈得上胜负。",
+ "把队伍逼到没退路，它才活得下来。人只有在没退路的时候才真正打得动。",
+ "Place your army in deadly peril, and it will survive; plunge it into desperate straits, and it will come off in safety. For it is precisely when a force has fallen into harm's way that it is capable of striking a blow for victory. (Giles, 1910)");
+q("s11.l1","敌所留之路，多不可走。","敌人给你留的那条路，多半不能走。","对面故意留的口，基本不能走。","The way the enemy leaves open is usually the way you must not take.");
+q("s11.l2","前所耗者，皆于此见。","前面耗掉的东西，全在这一关显出来。","前面亏的每一笔，这一把全还回来。","Everything you spent earlier shows up here.");
+q("s11.l3","无退路者，反有生路。","没有退路的人，反而有活路。","断了退路，反而活得下来。","Men with no way back find a way through.");
+
+/* ---------- 幕三 · 全胜 ---------- */
+q("s12.chap","火攻","火攻","火攻","The Attack by Fire");
+q("s12.brief",
+ "敌之积聚在下风十里，草木既燥，风起于我。三万之众仰给于此。",
+ "敌军的粮仓在下风口十里外，草木干燥，风正从你这边吹过去。他们三万人全靠这批粮活着。",
+ "对面的粮仓在下风口十里，天干，风正好往那边吹。他们三万人全靠这批粮。",
+ "Their stores lie ten li downwind. The grass is dry and the wind is behind you. Thirty thousand men eat from that granary.");
+q("s12.a","焚之。","放火烧掉。","烧了。","Burn it.");
+q("s12.b","不焚，围而招降。","不烧，围起来招降。","不烧，围着劝他们投。","Do not burn it. Surround them and offer terms.");
+q("s12.ar",
+ "火发于上风，积聚尽焚。敌无所食，旬日而溃。饿死者三万。此役遂定。",
+ "火从上风起，粮仓烧了个干净。敌军没饭吃，十天就散了。三万人饿死在那里。这一仗到此结束。",
+ "火从上风点起来，粮仓全没了。对面十天就散了。三万人饿死在那儿。这局结束。",
+ "The fire goes up from the windward side and the stores are gone. Within ten days they break. Thirty thousand starve. The campaign is decided.");
+q("s12.br",
+ "围之而遣使。守将知其不可久，出降。得其众三万，粮亦入我。",
+ "你围住他们，派人去谈。守将知道撑不下去，开城投降。三万人归你，粮也归你。",
+ "你围着他们，派人去谈。对面知道撑不住，投了。三万人和那批粮都归你。",
+ "You surround them and send an envoy. Their commander knows he cannot last. He surrenders. Thirty thousand men come over, and the grain with them.");
+q("s12.ask",
+ "尔胜矣。值乎？此问不记于功，唯记于册。",
+ "你赢了。值得吗？——这个问题不算功过，只记录下来。",
+ "你赢了。值吗？——这题不算分，只记录。",
+ "You won. Was it worth it? — This question is not scored. It is only recorded.");
+q("s12.ask1","值。","值得。","值。","Yes.");
+q("s12.ask2","不知。","说不好。","说不好。","I don't know.");
+q("s12.ask3","不值。","不值得。","不值。","No.");
+q("s12.line",
+ "非利不动，非得不用，非危不战。主不可以怒而兴师，将不可以愠而致战。亡国不可以复存，死者不可以复生。",
+ "没有利就不动，没有把握就不用，不到危急就不打。君主不能因为一时的火气就发兵，将领不能因为一时的憋屈就开战。国亡了不能再有，人死了不能再活。",
+ "没好处就别动，没把握就别用，不到必须就别打。上头不能因为上火就开团，带队的不能因为憋屈就开团。没了就是没了，人死不能复生。",
+ "Move not unless you see an advantage; use not your troops unless there is something to be gained; fight not unless the position is critical. No ruler should put troops into the field merely to gratify his own spleen; no general should fight a battle simply out of pique. A kingdom that has once been destroyed can never come again into being; nor can the dead ever be brought back to life. (Giles, 1910)");
+q("s12.l1","能赢的手段，不都该用。","能赢的手段，不代表都该用。","能赢的招，不一定都该用。","Not every winning move should be played.");
+q("s12.l2","死者不可以复生。","人死了不能再活过来。","人没了就是没了。","The dead cannot be brought back.");
+q("s12.l3","怒不可以兴师。","不能因为生气就发兵。","不能因为上头就开团。","Anger is not a reason to start a war.");
+
+q("s13.chap","用间","用间","用间","The Use of Spies");
+q("s13.brief",
+ "战将终矣。谋士请以百金养五间：乡间、内间、反间、死间、生间。府库方绌。",
+ "仗快打完了。谋士来请款：拿出重金养五种间谍——乡间、内间、反间、死间、生间。而府库正紧。",
+ "仗快打完了。手下来要预算：想花大钱养五种眼线。而账上正紧。",
+ "The war is nearly done. Your adviser asks for a hundred pieces of gold to keep five kinds of agents. The treasury is tight.");
+q("s13.a","予之。厚其禄，重其爵。","给。爵位和俸禄都给足。","给。钱和位置都给到位。","Pay. Give them rank and salary in full.");
+q("s13.b","不予。战已将终，何须此费。","不给。仗都快打完了，花这个钱干嘛。","不给。都快打完了，还花这钱干嘛。","Refuse. The war is almost over; why spend it now.");
+q("s13.ar",
+ "五间俱起，敌之虚实尽在尔目。凡军之所欲击、人之所欲杀，必先知其守将、左右、谒者、门者、舍人之姓名。惟明君贤将能以上智为间者，此兵之要。",
+ "五种间谍都用起来了，敌人的虚实在你眼里清清楚楚。要打哪支军、要拿下哪个人，先得知道守将、左右、传令、守门、门客都叫什么名字。只有明君贤将才肯用最聪明的人去做间谍——这是用兵的关键。",
+ "五种眼线全铺开，对面什么底你全清楚。要打谁、要拿下谁，先得把他身边所有人的名字摸清。舍得让最聪明的人去做这件事的，才是真会带队的。",
+ "All five kinds of agent are at work, and the enemy's condition is open to you. Whatever army you wish to strike, whatever person you wish to reach, you must first know the names of their commander, his aides, his gatekeepers, his attendants. Only the enlightened ruler and the wise general will use the highest intelligence of the army for purposes of spying.");
+q("s13.br",
+ "不予。谋士退。相守数年，以争一日之胜，而爱爵禄百金、不知敌之情者，不仁之至也。",
+ "你没给。谋士退下了。为了争一天的胜负，两军相持好几年；到这一步还舍不得那点爵禄百金、宁可不知道敌情——这是最大的不仁。",
+ "你没给，人走了。耗了这么久就为了赢那一天，到这会儿还舍不得这点钱、宁可不知道对面什么情况——这是最坑队友的。",
+ "You refuse and the adviser withdraws. Armies face each other for years, striving for the victory of a single day. To remain in ignorance of the enemy's condition simply because one grudges a hundred pieces of gold is the height of inhumanity.");
+q("s13.reveal",
+ "既未尝用间，今为尔正之：前十二篇所见敌数，三分之一皆伪也。其实如左。尔之胜，侥幸而已。",
+ "你从头到尾没有在情报上花过钱。现在把账给你算清楚：前面十二关你看到的敌军数字，有三成是假的。真实数字在下面。你赢得比你以为的侥幸得多。",
+ "你全程没在情报上花过一分钱。现在给你对个账：前面十二关你看到的对面数据，三成是假的。真实的在下面。你赢得比你以为的悬。",
+ "You never paid for intelligence. Here is the reckoning: about a third of the enemy numbers you were shown in the first twelve chapters were false. The true figures are below. You won by more luck than you knew.");
+q("s13.line",
+ "相守数年，以争一日之胜，而爱爵禄百金、不知敌之情者，不仁之至也。",
+ "耗了好几年就为了争一天的胜负，却舍不得爵禄和百金，宁可不知道敌人的情况——这是最不负责任的。",
+ "耗了这么久就为了赢那一把，却舍不得给钱、宁可不知道对面的底——这是最不负责任的。",
+ "Hostile armies may face each other for years, striving for the victory which is decided in a single day. This being so, to remain in ignorance of the enemy's condition simply because one grudges the outlay of a hundred ounces of silver in honours and emoluments, is the height of inhumanity. (Giles, 1910)");
+q("s13.l1","知敌者，非天授，买来的。","知道敌情不是天上掉的，是花钱换的。","情报不是白来的，是花钱买的。","Knowing the enemy is not a gift. It is bought.");
+q("s13.l2","爱百金而不知敌，最贵。","省下百金却不知敌情，才是最贵的。","省那点钱不看情报，其实最贵。","The cheapest saving is the most expensive one.");
+q("s13.l3","厚其禄，然后可用。","给足爵禄，人才用得动。","钱和位置给够，人才办事。","Pay them properly and they will serve.");
+
+/* ---------- 第十四 ---------- */
+q("s14.chap","第十四","第十四","第十四","The Fourteenth");
+q("s14.brief",
+ "使者自都至，持节。诏曰：即日决战，无得逗留。\n而尔立于垒上，见敌之形：其阵未成，其粮未至，其援方三日之程。今日决战，必败。诸将皆视尔。",
+ "都城来的使者到了，手里拿着符节。诏书上写着：即日决战，不得延误。\n你站在营垒上看着战场：敌军阵还没列好，粮还没到，援军还有三天路程。今天决战，必败无疑。所有将领都在看你。",
+ "上面派人来了，带着正式命令：今天必须开团，不许拖。\n你站在高处看着局面：对面阵型还没成，补给还没到，援军还有三天。今天开团，必输。所有人都在看你怎么办。",
+ "An envoy arrives from the capital carrying the royal tally. The order: give battle today. Do not delay.\nYou stand on the rampart and read the field. Their line is not formed, their supply has not arrived, their relief column is three days out. To fight today is to lose. Every officer is looking at you.");
+q("s14.a","奉诏。","接旨，照办。","接命令，照做。","Obey the order.");
+q("s14.b","君命有所不受。","君命有所不受。","这个命令我不接。","Some commands of the sovereign are not to be obeyed.");
+q("s14.ar",
+ "尔奉诏出战。是日大败，三军覆没。",
+ "你接旨出战。当天大败，全军覆没。",
+ "你接了命令，当天开团。全军覆没。",
+ "You obey and give battle. By evening the army has ceased to exist.");
+q("s14.aend","你赢了十三场。","你赢了十三场。","你赢了十三场。","You won thirteen battles.");
+q("s14.br",
+ "尔不受。三日而敌援至，为尔所邀，大破之。战定。\n既定，君召尔还朝。",
+ "你没有接。三天后敌军援军到了，被你半路截住，大破。仗打完了。\n仗打完之后，君主下诏召你还朝。",
+ "你没接。三天后对面援军到了，被你在半路截住，直接打崩。仗打完了。\n打完之后，上面下了一道命令：召你回去。",
+ "You do not obey. Three days later their relief column arrives, is caught on the march, and is destroyed. The war is decided.\nAfter it is decided, the king recalls you to court.");
+q("s14.brq",
+ "还朝之后，史无所载。",
+ "还朝之后的事，正史没有写。",
+ "回去之后的事，史书没写。",
+ "What happened after the recall is not recorded.");
+q("s14.plant",
+ "「君命有所不受」——尔已尝见之，在《九变》。",
+ "「君命有所不受」这句，你在第八篇《九变》里已经读过一次了。",
+ "「君命有所不受」这句，你在第八篇《九变》里读到过。",
+ "You have already read that line once — in Chapter Eight, Variation in Tactics.");
+q("s14.scrollq",
+ "简上十三条，皆尔所书。第十四条，空。",
+ "竹简上的十三条，都是你自己写的。第十四条是空的。",
+ "竹简上这十三条都是你自己写的。第十四条是空的。",
+ "The thirteen lines on the scroll are yours. The fourteenth is empty.");
+q("s14.big",
+ "尔手中之「第十四条」——命尔勿战则勿战，命尔还则速还——不在十三篇中。\n孙子于《九变》所书者，其反也。",
+ "你手上这份「第十四条」——让你别打就别打，让你回就麻溜地回——不在十三篇里。\n孙子在《九变》里写的，是它的反面。",
+ "你手上这条「第十四条」——让你别打就别打，让你回就赶紧回——十三篇里没有。\n孙子在《九变》里写的，是它的反面。",
+ "The fourteenth rule you are holding — do not fight when told not to fight, come back when told to come back — is not in the thirteen chapters.\nWhat Sun Tzu wrote in Chapter Eight is its opposite.");
+
+/* ---------- 结局 ---------- */
+q("e.shan","善之善者","善之善者","善之善者","The Highest Skill");
+q("e.shan.d",
+ "不战而屈人之兵，善之善者也。尔未攻城，未纵火，而敌服。",
+ "不打就让对方屈服，这是最好的赢法。你没有强攻城池，也没有放火，敌人还是服了。",
+ "不动手就让对面认输，这是最高的赢法。你没硬拆，也没烧粮，人家还是服了。",
+ "To subdue the enemy without fighting is the highest skill. You stormed nothing and burned nothing, and they yielded.");
+q("e.gong","功高不赏","功高不赏","功高不赏","No Reward for This");
+q("e.gong.d",
+ "十三战皆捷，而君心尽矣。凡按兵法而行者，多至于此。",
+ "十三仗全赢，君主对你的信任却已经见底。完全按兵法打的人，多半都会走到这里。",
+ "十三把全赢，但上头对你的信任已经没了。完全按书打的人，大多走到这一步。",
+ "Thirteen victories, and nothing left of the king's regard. This is where playing by the book usually ends.");
+q("e.jiu","久暴师则国用不足","久暴师则国用不足","久暴师则国用不足","The State Cannot Pay for This");
+q("e.jiu.d",
+ "胜矣，而师老财殚。此惨胜也。",
+ "赢是赢了，但兵疲粮尽，国库空了。这是惨胜。",
+ "赢是赢了，但人和资源都见底了。这是惨胜。",
+ "You won. The army is worn out and the treasury is empty. This is the expensive kind of victory.");
+q("e.luan","乱军引胜","乱军引胜","乱军引胜","You Handed Them the Win");
+q("e.luan.d",
+ "君命至而尔受之，自乱其军，引敌之胜。",
+ "命令到了，你接了，于是自己搅乱了自己的军队，把胜利送给了敌人。",
+ "命令来了你接了，自己把自己的队伍搞乱，把胜利让给了对面。",
+ "The order came and you took it. You disordered your own army and handed the victory across.");
+q("e.beng","兵败如山倒","兵败如山倒","兵败如山倒","The Collapse");
+q("e.beng.d",
+ "师既溃，不可复收。",
+ "军队一垮，就再也收不拢了。",
+ "队伍一崩，就再也收不回来了。",
+ "Once it goes, it cannot be gathered again.");
+
+/* ---------- 追加：延迟后果的提示语 ---------- */
+q("ui.gamblefail",
+ "尔尝赌速胜矣，而战未速决。囊中既空，士卒始食半菽。",
+ "你在第二篇赌了速胜，但仗没有速决。轻装出来的代价现在到了：军中开始减餐。",
+ "你开局赌了速推，结果没推动。轻装的代价现在来了：粮直接见底。",
+ "You gambled on a quick win in Chapter Two, and the win did not come quickly. The bill for travelling light arrives now.");
+q("ui.gambleok",
+ "尔赌速胜，果速决之。轻装之利，尽得之矣。",
+ "你赌了速胜，也真的打快了。轻装的好处全拿到了。",
+ "你赌了速推，也真推动了。轻装的收益全吃到了。",
+ "You gambled on speed and got it. The whole advantage of travelling light is yours.");
+q("ui.plague",
+ "洼地之营，湿气所中，疫作于军。非战而减员。",
+ "第九篇扎在低洼地的代价来了：军中起了疫病，非战斗减员。",
+ "第九篇扎低地的代价来了：营里起了病，非战斗减员。",
+ "The low camp from Chapter Nine comes due: sickness in the ranks, men lost without a battle.");
+q("ui.siegecost",
+ "谋攻时攻城所损之兵，此时不可复得。",
+ "第三篇强攻损掉的兵，这一关补不回来。",
+ "第三篇硬拆折的人，这一把补不回来。",
+ "The men you spent storming the city in Chapter Three are not here.");
+q("ui.suckpay",
+ "尝为之吮疽者，今为尔死斗。",
+ "第九篇你替他吸过疮的那些人，这一关在替你拼命。",
+ "第九篇你照顾过的那帮人，这一把在给你玩命。",
+ "The men whose wound you tended in Chapter Nine are fighting for you now.");
+q("ui.recorded","已记之。","已记录。","记下了。","Recorded.");
+q("ui.truth","实数","真实数字","真实数据","TRUE FIGURES");
+q("ui.shown","尔所见","你看到的","你看到的","WHAT YOU SAW");
+q("ui.act.badge","幕","幕","幕","ACT");
+q("ui.scenen","篇","第 {n} 篇","第 {n} 篇","Chapter {n}");
+q("ui.nums","一二三四五六七八九十十一十二十三十四","一二三四五六七八九十十一十二十三十四","一二三四五六七八九十十一十二十三十四","");
+q("ui.stats","埋点","埋点","埋点","Stats");
+q("ui.your13","尔之十三条","你的十三条","你的十三条","YOUR THIRTEEN");
+q("ui.his13","孙子之十三条","孙子的十三条","孙子的十三条","SUN TZU'S THIRTEEN");
+q("ui.final","终","终局","结算","FINAL");
+q("ui.emailsubj","第十四条","第十四条","第十四条","The Fourteenth Rule");
+q("ui.classsubj","课堂","课堂使用","课堂使用","Classroom use");
+
+/* ============================================================
+   语气表：由 Q 生成 L.wen / L.bai / L.hei / L.en，键集恒等
+   ============================================================ */
+var L={wen:{},bai:{},hei:{},en:{}};
+(function(){for(var k in Q){var v=Q[k];for(var i=0;i<4;i++){L[TONES[i]][k]=v[i];}}})();
+var MISSING=[];
+var TONE=(function(){try{return localStorage.getItem("sunzi_tone")||"bai"}catch(e){return "bai"}})();
+if(TONES.indexOf(TONE)<0)TONE="bai";
+var SLANG=(function(){try{return localStorage.getItem("sunzi_slang_unlocked")==="1"}catch(e){return false}})();
+if(TONE==="hei"&&!SLANG)TONE="bai";
+function t(k,vars){
+  var tab=L[TONE]||L.bai, s=tab[k];
+  if(s===undefined||s===null){ if(MISSING.indexOf(k)<0)MISSING.push(k);
+    try{console.warn("MISSING KEY",k,TONE);}catch(e){} return "«"+k+"»"; }
+  if(vars){for(var p in vars){s=s.split("{"+p+"}").join(vars[p]);}}
+  return s;
+}
+function setTone(x){ if(x==="hei"&&!SLANG)return; TONE=x;
+  try{localStorage.setItem("sunzi_tone",x)}catch(e){}
+  document.documentElement.lang = (x==="en")?"en":"zh-Hans";
+  syncTone(); render(); }
+function syncTone(){
+  var bs=document.querySelectorAll("#toneseg button");
+  for(var i=0;i<bs.length;i++){var b=bs[i];
+    b.setAttribute("aria-pressed", b.getAttribute("data-tone")===TONE?"true":"false");
+    if(b.getAttribute("data-tone")==="hei"){ if(SLANG)b.removeAttribute("hidden"); else b.setAttribute("hidden",""); }
+  }
+  var sb=document.getElementById("slangbtn");
+  sb.style.borderColor = SLANG? "var(--zhu)":"var(--line)";
+  sb.style.color = SLANG? "var(--zhu)":"var(--ink2)";
+  document.getElementById("installbtn").textContent=t("ui.install");
+  document.getElementById("foot").textContent=t("ui.foot");
+}
+
+/* ============================================================
+   十四篇数据：一篇一决策
+   ============================================================ */
+var CN="〇一二三四五六七八九十".split("");
+function cn(n){ if(n<=10)return CN[n]; return "十"+CN[n-10]; }
+function chapNo(n){ return TONE==="en" ? ("CHAPTER "+n) : ("第"+cn(n)+"篇"); }
+
+var SCENES=[
+ {n:1,k:"s1",act:1,intel:{n:8,m:6,c:"jiao"},truth:{n:11,m:4,c:"jin"},opts:[
+   {o:"a",eff:{jun:15,shi:5},flags:{fog:1}},
+   {o:"b",eff:{jun:-10,shi:5},flags:{calc:1}},
+   {o:"c",eff:{jun:-25,liang:10},flags:{remon:1}}]},
+ {n:2,k:"s2",act:1,intel:{n:8,m:6,c:"jiao"},truth:{n:11,m:4,c:"jin"},opts:[
+   {o:"a",eff:{liang:25,shi:-10},flags:{baggage:1}},
+   {o:"b",eff:{liang:40,bing:-5},flags:{forage:1}},
+   {o:"c",eff:{liang:-10,shi:15},flags:{gamble:1}}]},
+ {n:3,k:"s3",act:1,intel:{n:3,m:8,c:"jin"},truth:{n:4,m:5,c:"jin"},opts:[
+   {o:"a",eff:{jun:10},flags:{siege:1},sp:function(S){S.bing=Math.round(S.bing*0.7);return null;}},
+   {o:"b",eff:{shi:-15,jun:-5},flags:{diplo:1},gate:function(S){return S.shi>=25?null:"ui.needshi";}},
+   {o:"c",eff:{shi:10,jun:-5},flags:{subvert:1},gate:function(S){return S.flags.calc?null:"ui.needjian";}}]},
+ {n:4,k:"s4",act:1,intel:{n:6,m:5,c:"jin"},truth:{n:8,m:3,c:"jin"},opts:[
+   {o:"a",eff:{bing:-12,jun:5}},
+   {o:"b",eff:{jun:-20,shi:10},flags:{patience:1}},
+   {o:"c",eff:{bing:-5,shi:3}}]},
+ {n:5,k:"s5",act:1,intel:{n:6,m:5,c:"nu"},truth:{n:8,m:3,c:"nu"},opts:[
+   {o:"a",eff:{bing:-16,shi:-5,jun:10}},
+   {o:"b",eff:{bing:-8,shi:15},flags:{qi:1}},
+   {o:"c",eff:{bing:-20,shi:-5}}]},
+ {n:6,k:"s6",act:2,intel:{n:5,m:4,c:"jin"},truth:{n:7,m:3,c:"jin"},opts:[
+   {o:"a",eff:{shi:-10,bing:-6,liang:-6}},
+   {o:"b",eff:{shi:15,liang:-4},flags:{initiative:1}},
+   {o:"c",eff:{liang:-14,jun:-10}}]},
+ {n:7,k:"s7",act:2,intel:{n:5,m:4,c:"tan"},truth:{n:7,m:3,c:"tan"},opts:[
+   {o:"a",eff:{liang:-25,shi:5},gate:function(S){return S.flags.baggage?"s7.lock":null;}},
+   {o:"b",eff:{bing:-12,shi:-5,liang:-8}},
+   {o:"c",eff:{shi:10,bing:-5,liang:-6},flags:{pass:1},gate:function(S){return S.bing>=60?null:"ui.needbing";}}]},
+ {n:8,k:"s8",act:2,intel:{n:5,m:3,c:"nu"},truth:{n:6,m:2,c:"nu"},opts:[
+   {o:"a",eff:{bing:-16,liang:-5}},
+   {o:"b",eff:{shi:10,liang:-8,jun:-15},flags:{starve:1}},
+   {o:"c",sp:function(S){ if(S.flags.calc){ mod(S,{shi:15,bing:-5}); return {res:"s8.cr1"}; }
+                          mod(S,{shi:-10,bing:-10,jun:-5}); return {res:"s8.cr0"}; }}]},
+ {n:9,k:"s9",act:2,intel:{n:4,m:3,c:"jin"},truth:{n:5,m:2,c:"jin"},opts:[
+   {o:"a",eff:{liang:5},flags:{lowground:1}},
+   {o:"b",eff:{shi:8,jun:-5,liang:-5}},
+   {o:"c",eff:{shi:8,jun:-10,liang:-5},flags:{suck:1}}]},
+ {n:10,k:"s10",act:2,intel:{n:4,m:3,c:"qie"},truth:{n:5,m:2,c:"qie"},opts:[
+   {o:"a",eff:{bing:-5,liang:-10}},
+   {o:"b",eff:{shi:5,liang:-5},flags:{through:1}},
+   {o:"c",eff:{liang:-20,jun:-5}}]},
+ {n:11,k:"s11",act:2,intel:{n:9,m:5,c:"jin"},truth:{n:12,m:4,c:"jin"},opts:[
+   {o:"a",sp:function(S){ mod(S,{bing:-40,shi:-15}); S.flags.broke=1; return null; }},
+   {o:"b",sp:function(S){ var sc=0; if(S.bing>=55)sc+=2; else if(S.bing>=40)sc+=1;
+       if(S.flags.suck)sc+=2; if(S.flags.siege)sc-=2; if(S.flags.lowground)sc-=1; if(S.flags.qi)sc+=1;
+       var ex=[]; if(S.flags.suck)ex.push("ui.suckpay"); if(S.flags.siege)ex.push("ui.siegecost");
+       if(sc>=2){ mod(S,{bing:-20,shi:25,jun:5}); S.flags.deathwin=1; return {res:"s11.br1",extra:ex}; }
+       mod(S,{bing:-45,shi:-10}); S.flags.broke=1; return {res:"s11.br0",extra:ex}; }},
+   {o:"c",sp:function(S){ mod(S,{bing:-30,shi:-8}); return null; }}]},
+ {n:12,k:"s12",act:3,intel:{n:3,m:1,c:"qie"},truth:{n:4,m:1,c:"qie"},opts:[
+   {o:"a",eff:{shi:15,jun:15},flags:{fire:1}},
+   {o:"b",eff:{shi:10,liang:15,bing:5},flags:{mercy:1}}]},
+ {n:13,k:"s13",act:3,intel:{n:2,m:1,c:"qie"},truth:{n:3,m:1,c:"qie"},opts:[
+   {o:"a",eff:{liang:-10,shi:5},flags:{spies:1}},
+   {o:"b",eff:{jun:5},flags:{nospies:1}}]},
+ {n:14,k:"s14",act:4,intel:{n:2,m:1,c:"qie"},truth:{n:2,m:1,c:"qie"},opts:[
+   {o:"a",sp:function(S){ mod(S,{bing:-100,shi:-40,jun:20}); S.flags.obeyed=1; return null; }},
+   {o:"b",sp:function(S){ mod(S,{shi:20,jun:-30,bing:-10}); S.flags.refused=1; return null; }}]}
+];
+function nOpts(sc){return sc.opts.length;}
+
+/* ============================================================
+   状态机
+   ============================================================ */
+var SAVEKEY="sunzi_save", STATKEY="sunzi_stats";
+var ANALYTICS_ENDPOINT = ""; /* 空字符串 = 不发任何网络请求 */
+function freshState(){
+  return {liang:100,bing:100,shi:20,jun:60,flags:{},lines:[],picks:{},
+          idx:0,phase:"choose",last:null,t0:Date.now(),ask12:null,r14:"",done:false};
+}
+var S=null, LASTDELTA={};
+function clamp(v){return Math.max(0,Math.min(999,Math.round(v)));}
+var CAP={liang:150,bing:120,shi:100,jun:100};
+function mod(st,e){ if(!e)return; for(var k in e){
+  var v=clamp((st[k]||0)+e[k]); if(CAP[k]!==undefined) v=Math.min(v,CAP[k]);
+  LASTDELTA[k]=(LASTDELTA[k]||0)+(v-(st[k]||0)); st[k]=v; } }
+function save(){ try{localStorage.setItem(SAVEKEY,JSON.stringify(S))}catch(e){} }
+function load(){ try{var r=localStorage.getItem(SAVEKEY); return r?JSON.parse(r):null}catch(e){return null} }
+function clearSave(){ try{localStorage.removeItem(SAVEKEY)}catch(e){} }
+
+/* ---------- 埋点 ---------- */
+function stats(){ try{var r=localStorage.getItem(STATKEY); if(r)return JSON.parse(r);}catch(e){}
+  return {v:1,starts:0,reached:{},picks:{},completes:0,durations:[],endings:{},tones:{}}; }
+function putStats(o){ try{localStorage.setItem(STATKEY,JSON.stringify(o))}catch(e){} }
+function track(ev,data){
+  var o=stats();
+  if(ev==="start"){o.starts++;}
+  if(ev==="scene"){o.reached[data.n]=(o.reached[data.n]||0)+1;}
+  if(ev==="pick"){o.picks[data.id]=(o.picks[data.id]||0)+1;}
+  if(ev==="complete"){o.completes++;o.durations.push(data.sec);o.endings[data.end]=(o.endings[data.end]||0)+1;}
+  o.tones[TONE]=(o.tones[TONE]||0)+1;
+  putStats(o);
+  if(ANALYTICS_ENDPOINT){ try{navigator.sendBeacon(ANALYTICS_ENDPOINT,JSON.stringify({ev:ev,data:data,tone:TONE,ts:Date.now()}));}catch(e){} }
+}
+window.__stats=function(){ var o=stats();
+  o.completionRate = o.starts? (o.completes/o.starts):0;
+  o.medianSec = (function(d){ if(!d.length)return 0; var a=d.slice().sort(function(x,y){return x-y}); return a[Math.floor(a.length/2)];})(o.durations);
+  return o; };
+window.__reset=function(){ clearSave(); try{localStorage.removeItem(STATKEY)}catch(e){} location.reload(); };
+
+/* ---------- 敌情 ---------- */
+function intelText(sc,useTruth){
+  var d = useTruth? sc.truth : sc.intel;
+  var fog = S.flags.fog && !S.flags.spies;
+  if(fog && !useTruth){ var u=t("ui.intel.fog");
+    return t("ui.intel.tpl",{n:"?",m:"?",c:u}); }
+  return t("ui.intel.tpl",{n:d.n,m:d.m,c:t("ui.gen."+d.c)});
+}
+/* ---------- 结局 ---------- */
+function ending(){
+  var f=S.flags;
+  if(f.obeyed) return "luan";
+  if(S.bing<=8 || f.broke && !f.deathwin && S.bing<=20) return "beng";
+  var bloodless = !f.siege && !f.fire && (f.subvert||f.diplo) && S.bing>=55;
+  if(bloodless) return "shan";
+  if(S.jun<=22) return "gong";
+  if(S.liang<=28 || S.bing<=45) return "jiu";
+  return "gong";
+}
+
+/* ---------- 舆图（暗合三路，标注只用兵法语） ---------- */
+q("map.r1","北道","北道","北道","North Road");
+q("map.r2","中道","中道","中道","Centre Road");
+q("map.r3","南道","南道","南道","South Road");
+q("map.ye","野","野","野","Enemy fields");
+q("map.guan","关隘","关隘","关隘","The Pass");
+q("map.lin","林","林","林","Woods");
+q("map.wo","我","我军","我军","US");
+q("map.di","敌","敌军","敌军","THEM");
+(function(){for(var k in Q){var v=Q[k];for(var i=0;i<4;i++){L[TONES[i]][k]=v[i];}}})();
+
+function mapSVG(n){
+  var lane = n<=5?3 : (n<=8?1 : (n<=11?2:0));
+  function c(i){return lane===i?"#a8321e":"#b6a684";}
+  function w(i){return lane===i?2.4:1.4;}
+  var fs = TONE==="en"?9:11;
+  return '<div class="mapwrap"><svg class="map" viewBox="0 0 620 250" role="img" aria-label="舆图">'
+  +'<rect x="0" y="0" width="620" height="250" fill="#f7f2e6"/>'
+  +'<g stroke="#ddd2b8" stroke-width="1">'
+  +'<path d="M0 62 H620 M0 125 H620 M0 188 H620" opacity=".5"/></g>'
+  /* 三道 */
+  +'<path d="M78 196 C 190 150, 300 96, 452 54" fill="none" stroke="'+c(1)+'" stroke-width="'+w(1)+'"/>'
+  +'<path d="M78 196 C 210 190, 320 140, 452 54" fill="none" stroke="'+c(2)+'" stroke-width="'+w(2)+'"/>'
+  +'<path d="M78 196 C 200 232, 340 214, 452 54" fill="none" stroke="'+c(3)+'" stroke-width="'+w(3)+'"/>'
+  /* 林 */
+  +'<g fill="none" stroke="#8a9c7a" stroke-width="1.2">'
+  +'<path d="M150 78 l7 -16 l7 16 z M168 84 l6 -14 l6 14 z M186 74 l7 -15 l7 15 z"/>'
+  +'<path d="M372 178 l7 -16 l7 16 z M390 186 l6 -14 l6 14 z"/></g>'
+  +'<text x="152" y="60" font-size="'+fs+'" fill="#5f6f52">'+t("map.lin")+'</text>'
+  /* 野 */
+  +'<g stroke="#b79a52" stroke-width="1" fill="none">'
+  +'<path d="M300 34 h56 M300 41 h56 M300 48 h56"/><path d="M470 150 h50 M470 157 h50 M470 164 h50"/></g>'
+  +'<text x="300" y="27" font-size="'+fs+'" fill="#8a6d3b">'+t("map.ye")+'</text>'
+  +'<text x="470" y="143" font-size="'+fs+'" fill="#8a6d3b">'+t("map.ye")+'</text>'
+  /* 关隘 */
+  +'<g stroke="#8a6d3b" stroke-width="1.6" fill="#efe4c9">'
+  +'<path d="M258 112 l16 -10 l16 10 v18 h-32 z"/></g>'
+  +'<text x="244" y="146" font-size="'+fs+'" fill="#8a6d3b">'+t("map.guan")+'</text>'
+  /* 两营 */
+  +'<circle cx="78" cy="196" r="9" fill="#f4efe4" stroke="#23201c" stroke-width="1.6"/>'
+  +'<text x="60" y="223" font-size="'+fs+'" fill="#23201c">'+t("map.wo")+'</text>'
+  +'<circle cx="452" cy="54" r="9" fill="#f4efe4" stroke="#a8321e" stroke-width="1.6"/>'
+  +'<text x="466" y="46" font-size="'+fs+'" fill="#a8321e">'+t("map.di")+'</text>'
+  /* 道名 */
+  +'<text x="196" y="120" font-size="'+fs+'" fill="'+c(1)+'">'+t("map.r1")+'</text>'
+  +'<text x="230" y="176" font-size="'+fs+'" fill="'+c(2)+'">'+t("map.r2")+'</text>'
+  +'<text x="214" y="228" font-size="'+fs+'" fill="'+c(3)+'">'+t("map.r3")+'</text>'
+  +'</svg></div>';
+}
+
+/* ---------- 组件 ---------- */
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function nl(s){return esc(s).replace(/\n/g,"<br>");}
+function hud(){
+  var K=[["liang","ui.liang"],["bing","ui.bing"],["shi","ui.shi"],["jun","ui.jun"]];
+  var h='<div class="hud">';
+  for(var i=0;i<4;i++){ var d=LASTDELTA[K[i][0]]||0;
+    h+='<div><div class="k">'+esc(t(K[i][1]))+'</div><div class="v">'+S[K[i][0]]+'</div>'
+      +'<div class="d'+(d>0?" up":"")+'">'+(d?(d>0?"+"+d:d):"")+'</div></div>'; }
+  return h+'</div>';
+}
+function dots(){
+  var h='<div class="dots">';
+  for(var i=0;i<14;i++){ h+='<i class="'+(i<S.idx?"done":(i===S.idx?"now":""))+'"></i>'; }
+  return h+'</div>';
+}
+function actbar(a){
+  var A=[["ui.act1",1],["ui.act2",2],["ui.act3",3],["ui.act4",4]];
+  var h='<div class="acts">';
+  for(var i=0;i<4;i++){h+='<span class="'+(A[i][1]===a?"on":"")+'">'+esc(t(A[i][0]))+'</span>';}
+  return h+'</div>';
+}
+function scrollHTML(showEmpty){
+  var h='<div class="scroll">';
+  for(var i=0;i<13;i++){
+    var ln=S.lines[i];
+    if(!ln)continue;
+    h+='<div class="slip"><span class="n">'+esc(chapNo(i+1))+'</span>'+esc(ln.mine)
+      +'<span class="s">'+esc(ln.his)+'</span></div>';
+  }
+  if(showEmpty){ h+='<div class="slip empty"><span class="n">'+esc(chapNo(14))+'</span>'
+    + (S.r14? esc(S.r14) : "　　　　　　　　") +'</div>'; }
+  return h+'</div>';
+}
+
+/* ============================================================
+   渲染
+   ============================================================ */
+var app=document.getElementById("app");
+function h(x){app.innerHTML=x;}
+function cur(){return SCENES[S.idx];}
+
+function render(){
+  syncTone();
+  if(!S){ renderTitle(); return; }
+  if(S.phase==="final"){ renderFinal(); return; }
+  if(S.phase==="reveal14"){ renderReveal14(); return; }
+  var sc=cur();
+  if(S.phase==="choose")  return renderChoose(sc);
+  if(S.phase==="resolve") return renderResolve(sc);
+  if(S.phase==="write")   return renderWrite(sc);
+  if(S.phase==="reveal")  return renderReveal(sc);
+  renderTitle();
+}
+
+function renderTitle(){
+  var saved=load();
+  h('<h1><span class="zhu">'+esc(t("ui.title"))+'</span><br>'+esc(t("ui.sub"))+'</h1>'
+    +'<p class="sub">'+esc(t("ui.rule"))+'</p>'
+    + mapSVG(0)
+    +'<div class="card"><p class="brief">'+nl(t("ui.pitch"))+'</p></div>'
+    +'<div class="row"><button class="btn" id="go">'+esc(t("ui.begin"))+'</button>'
+    + (saved&&!saved.done? '<button class="btn ghost" id="res">'+esc(t("ui.resume"))+'</button>':'')
+    +'</div>');
+  document.getElementById("go").onclick=function(){ S=freshState(); LASTDELTA={}; track("start",{}); track("scene",{n:1}); save(); render(); };
+  var r=document.getElementById("res");
+  if(r)r.onclick=function(){ S=saved; LASTDELTA={}; render(); };
+}
+
+function renderChoose(sc){
+  var head='<div class="kicker">'+esc(chapNo(sc.n))+'</div>'
+    +'<h2 class="chapname">'+esc(t(sc.k+".chap"))+'</h2>';
+  var body='<div class="card">'+ head
+    +'<p class="brief">'+nl(t(sc.k+".brief"))+'</p>'
+    + (sc.n===10? '<p class="tick">'+nl(t("s10.obs"))+'</p>':'')
+    +'<div class="tick"><b>'+esc(t("ui.intel"))+'</b> '+esc(intelText(sc,false))+'</div>'
+    +'<div class="opts" id="opts"></div></div>';
+  h(actbar(sc.act)+hud()+mapSVG(sc.n)+dots()+body);
+  var box=document.getElementById("opts");
+  for(var i=0;i<sc.opts.length;i++){
+    (function(op){
+      var reason = op.gate? op.gate(S):null;
+      var b=document.createElement("button");
+      b.className="opt";
+      b.innerHTML='<span class="tag">'+"（"+op.o+"）"+'</span>'+esc(t(sc.k+"."+op.o))
+        + (reason? '<span class="why">'+esc(t(reason))+'</span>':'');
+      if(reason){ b.disabled=true; }
+      else b.onclick=function(){ choose(sc,op); };
+      box.appendChild(b);
+    })(sc.opts[i]);
+  }
+}
+
+function choose(sc,op){
+  LASTDELTA={};
+  var res=null, extra=[];
+  if(op.eff) mod(S,op.eff);
+  if(op.flags) for(var f in op.flags) S.flags[f]=op.flags[f];
+  if(op.sp){ var r=op.sp(S); if(r){ if(r.res)res=r.res; if(r.extra)extra=r.extra; } }
+  /* 每关自然耗粮 */
+  if(sc.n<14) mod(S,{liang:-4});
+  /* 延迟后果结算 */
+  if(sc.n===5 && S.flags.gamble){
+    if(op.o==="b"||S.flags.subvert){ extra.push("ui.gambleok"); mod(S,{shi:5}); }
+    else { extra.push("ui.gamblefail"); mod(S,{liang:-35}); }
+  }
+  if((sc.n===10||sc.n===11) && S.flags.lowground && !S.flags.plagued){
+    S.flags.plagued=1; extra.push("ui.plague"); mod(S,{bing:-10});
+  }
+  if(sc.n<11) S.bing=Math.max(S.bing,6);
+  S.picks[sc.k]=op.o;
+  S.last={o:op.o,res:res||(sc.k+"."+op.o+"r"),extra:extra};
+  track("pick",{id:sc.k+"."+op.o});
+  S.phase="resolve"; save(); render();
+  window.scrollTo(0,0);
+}
+
+function renderResolve(sc){
+  var L2=S.last;
+  var extras="";
+  for(var i=0;i<L2.extra.length;i++) extras+='<p class="tick">'+nl(t(L2.extra[i]))+'</p>';
+  var special="";
+  if(sc.n===13 && S.picks.s13==="b" && !S.flags.spies && !S.flags.subvert){
+    special='<div class="res">'+nl(t("s13.reveal"))+'</div>'
+      +'<p class="tick"><b>'+esc(t("ui.shown"))+'</b> '+esc(t("ui.intel.tpl",{n:"9",m:"5",c:t("ui.gen.jin")}))+'</p>'
+      +'<p class="tick"><b>'+esc(t("ui.truth"))+'</b> '+esc(t("ui.intel.tpl",{n:"12",m:"4",c:t("ui.gen.jin")}))+'</p>';
+  }
+  if(sc.n===14 && L2.o==="a"){
+    h('<div class="card"><div class="kicker">'+esc(chapNo(14))+'</div>'
+      +'<div class="res">'+nl(t("s14.ar"))+'</div></div>'
+      +'<h1 style="text-align:center;margin:44px 0">'+esc(t("s14.aend"))+'</h1>'
+      +'<div class="row"><button class="btn" id="nx">'+esc(t("ui.next"))+'</button></div>');
+    document.getElementById("nx").onclick=function(){ S.phase="reveal14"; save(); render(); window.scrollTo(0,0); };
+    return;
+  }
+  var ask="";
+  if(sc.n===12){
+    ask='<div class="hr"></div><p class="brief">'+nl(t("s12.ask"))+'</p><div class="sugs" id="ask12">'
+      +'<button class="sug" data-v="1">'+esc(t("s12.ask1"))+'</button>'
+      +'<button class="sug" data-v="2">'+esc(t("s12.ask2"))+'</button>'
+      +'<button class="sug" data-v="3">'+esc(t("s12.ask3"))+'</button></div>'
+      +'<p class="tick" id="askm"></p>';
+  }
+  h(actbar(sc.act)+hud()
+    +'<div class="card"><div class="kicker">'+esc(t("ui.result"))+'</div>'
+    +'<div class="res">'+nl(t(L2.res))+'</div>'+extras+special+ask+'</div>'
+    +'<div class="row"><button class="btn" id="nx">'
+    + esc(sc.n===14? t("ui.next") : t("ui.write"))+'</button></div>');
+  if(sc.n===12){
+    var box=document.getElementById("ask12"), bs=box.querySelectorAll("button");
+    for(var j=0;j<bs.length;j++) bs[j].onclick=function(){
+      S.ask12=this.getAttribute("data-v"); save();
+      document.getElementById("askm").textContent=t("ui.recorded");
+      var all=box.querySelectorAll("button");
+      for(var m=0;m<all.length;m++){all[m].style.borderStyle="solid";all[m].style.opacity=.5;}
+      this.style.opacity=1; this.style.borderColor="var(--zhu)";
+    };
+  }
+  document.getElementById("nx").onclick=function(){
+    if(sc.n===14){ S.phase="reveal14"; } else { S.phase="write"; }
+    save(); render(); window.scrollTo(0,0);
+  };
+}
+
+function renderWrite(sc){
+  h(actbar(sc.act)
+    +'<div class="card"><div class="kicker">'+esc(chapNo(sc.n))+' · '+esc(t(sc.k+".chap"))+'</div>'
+    +'<p class="brief">'+esc(t("ui.writeq"))+'</p>'
+    +'<textarea id="ta" rows="3" placeholder="'+esc(t("ui.writeph"))+'"></textarea>'
+    +'<p class="tick">'+esc(t("ui.sugs"))+'</p>'
+    +'<div class="sugs" id="sg">'
+      +'<button class="sug" data-i="1">'+esc(t(sc.k+".l1"))+'</button>'
+      +'<button class="sug" data-i="2">'+esc(t(sc.k+".l2"))+'</button>'
+      +'<button class="sug" data-i="3">'+esc(t(sc.k+".l3"))+'</button>'
+    +'</div>'
+    +'<div class="row"><button class="btn" id="ok" disabled>'+esc(t("ui.write"))+'</button></div></div>');
+  var ta=document.getElementById("ta"), ok=document.getElementById("ok");
+  function chk(){ ok.disabled = ta.value.trim().length===0; }
+  ta.addEventListener("input",chk);
+  var sgs=document.getElementById("sg").querySelectorAll("button");
+  for(var i=0;i<sgs.length;i++) sgs[i].onclick=function(){ ta.value=this.textContent; chk(); ta.focus(); };
+  ok.onclick=function(){
+    S.lines[sc.n-1]={mine:ta.value.trim(),his:t(sc.k+".line")};
+    S.phase="reveal"; save(); render(); window.scrollTo(0,0);
+  };
+  chk();
+}
+
+function renderReveal(sc){
+  var ln=S.lines[sc.n-1];
+  var note="";
+  if(sc.n===8) note='<p class="tick">'+nl(t("s8.note"))+'</p>';
+  if(sc.n===9 && S.picks.s9==="c") note='<div class="res">'+nl(t("s9.hist"))+'</div>';
+  if(sc.n===9 && S.picks.s9!=="c") note='<p class="tick">'+nl(t("s9.hist"))+'</p>';
+  h('<div class="card"><div class="kicker">'+esc(chapNo(sc.n))+' · '+esc(t(sc.k+".chap"))+'</div>'
+    +'<div class="compare"><div class="mine"><div class="who">'+esc(t("ui.mine"))+'</div>'+esc(ln.mine)+'</div>'
+    +'<div class="his"><div class="who">'+esc(t("ui.his"))+'</div><div class="yuan">'+esc(ln.his)+'</div></div></div>'
+    + note +'</div>'
+    + scrollHTML(false)
+    +'<div class="row"><button class="btn" id="nx">'+esc(t("ui.next"))+'</button></div>');
+  document.getElementById("nx").onclick=function(){
+    S.idx++; S.phase="choose"; LASTDELTA={};
+    if(S.idx>=SCENES.length){ S.phase="final"; }
+    else track("scene",{n:S.idx+1});
+    save(); render(); window.scrollTo(0,0);
+  };
+}
+
+function renderReveal14(){
+  var body='<div class="card"><div class="kicker">'+esc(chapNo(14))+'</div>';
+  if(S.picks.s14==="b"){ body+='<div class="res">'+nl(t("s14.br"))+'</div>'
+    +'<p class="tick">'+nl(t("s14.brq"))+'</p>'; }
+  body+='<p class="tick">'+nl(t("s14.plant"))+'</p></div>';
+  h(body + scrollHTML(true)
+    +'<div class="card"><p class="brief">'+nl(t("s14.scrollq"))+'</p>'
+    +'<p class="big14">'+nl(t("s14.big"))+'</p>'
+    +'<p class="brief" style="font-size:19px;color:var(--zhu)">'+esc(t("ui.finalq"))+'</p></div>'
+    +'<div class="card"><p class="brief">'+esc(t("ui.write14"))+'</p>'
+    +'<textarea id="ta14" rows="3" placeholder="'+esc(t("ui.ph14"))+'"></textarea>'
+    +'<p class="tick">'+esc(t("ui.noanswer"))+'</p>'
+    +'<div class="row"><button class="btn" id="ok14" disabled>'+esc(t("ui.done14"))+'</button></div></div>');
+  var ta=document.getElementById("ta14"), ok=document.getElementById("ok14");
+  if(S.r14) ta.value=S.r14;
+  function chk(){ ok.disabled=ta.value.trim().length===0; }
+  ta.addEventListener("input",chk); chk();
+  ok.onclick=function(){
+    S.r14=ta.value.trim(); S.phase="final"; S.done=true;
+    var sec=Math.round((Date.now()-S.t0)/1000);
+    S.sec=sec; track("complete",{sec:sec,end:ending()});
+    save(); render(); window.scrollTo(0,0);
+  };
+}
+
+function fmtTime(sec){
+  var m=Math.floor(sec/60), s=sec%60;
+  if(TONE==="en") return m+" min "+s+" s";
+  return m+t("ui.min")+s+t("ui.sec");
+}
+function mailto(sub,body){
+  return "mailto:?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(body);
+}
+function renderFinal(){
+  var e=ending();
+  var body='<div class="card" style="text-align:center">'
+    +'<div class="kicker">'+esc(t("ui.final"))+'</div>'
+    +'<div class="end">'+esc(t("e."+e))+'</div>'
+    +'<p class="quiet">'+nl(t("e."+e+".d"))+'</p></div>'
+    + hud()
+    +'<p class="tick">'+esc(t("ui.time"))+' '+esc(fmtTime(S.sec||Math.round((Date.now()-S.t0)/1000)))+'</p>'
+    +'<div class="hr"></div><div class="kicker">'+esc(t("ui.scroll"))+'</div>'
+    + scrollHTML(true)
+    +'<div class="hr"></div><div class="exits">'
+    +'<a href="'+mailto(t("ui.emailsubj"),(S.r14||""))+'">'+esc(t("ui.exit1"))+'<small>'+esc(t("ui.exit1s"))+'</small></a>'
+    +'<a href="'+mailto(t("ui.classsubj"),"")+'">'+esc(t("ui.exit2"))+'<small>'+esc(t("ui.exit2s"))+'</small></a>'
+    +'<button id="sharebtn">'+esc(t("ui.share"))+'<small>'+esc(t("ui.exit3s"))+'</small></button>'
+    +'</div><p class="tick" id="sharemsg"></p>'
+    +'<div class="row"><button class="btn ghost" id="again">'+esc(t("ui.restart"))+'</button></div>';
+  h(body);
+  document.getElementById("sharebtn").onclick=function(){ makeCard(e); };
+  document.getElementById("again").onclick=function(){ clearSave(); S=null; LASTDELTA={}; render(); window.scrollTo(0,0); };
+}
+
+/* ---------- 分享卡 canvas → PNG ---------- */
+function wrapText(ctx,txt,x,y,maxw,lh,max){
+  var line="",n=0,out=[];
+  for(var i=0;i<txt.length;i++){
+    var test=line+txt[i];
+    if(ctx.measureText(test).width>maxw && line){ out.push(line); line=txt[i]; }
+    else line=test;
+  }
+  if(line)out.push(line);
+  if(max&&out.length>max){ out=out.slice(0,max); out[max-1]=out[max-1].slice(0,-1)+"…"; }
+  for(var j=0;j<out.length;j++) ctx.fillText(out[j],x,y+j*lh);
+  return out.length*lh;
+}
+function makeCard(e){
+  var cv=document.getElementById("share"), ctx=cv.getContext("2d");
+  var W=1080, F='"Songti SC","Noto Serif CJK SC",Georgia,serif';
+  /* 先量一遍高度 */
+  ctx.font="24px "+F;
+  var Hy=214;
+  for(var q0=0;q0<13;q0++){ var l0=S.lines[q0]; if(!l0)continue;
+    Hy += Math.max(38, Math.min(2,Math.ceil(ctx.measureText(l0.mine).width/(W-280)))*32+8); }
+  var r14lines=Math.min(3,Math.max(1,Math.ceil(ctx.measureText(S.r14||"").width/(W-140))));
+  var H=Math.max(900, Hy+6+52+118+64+38+r14lines*38+140);
+  cv.height=H;
+  ctx.fillStyle="#f4efe4"; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle="#cfc4ad"; ctx.lineWidth=3; ctx.strokeRect(30,30,W-60,H-60);
+  ctx.fillStyle="#a8321e"; ctx.font="44px "+F;
+  ctx.fillText(t("ui.title"),70,120);
+  ctx.fillStyle="#5a5348"; ctx.font="26px "+F;
+  ctx.fillText(t("ui.your13"),70,168);
+  var y=214;
+  ctx.font="24px "+F;
+  for(var i=0;i<13;i++){
+    var ln=S.lines[i]; if(!ln)continue;
+    ctx.fillStyle="#a8321e"; ctx.font="20px "+F;
+    ctx.fillText(chapNo(i+1),70,y);
+    ctx.fillStyle="#23201c"; ctx.font="24px "+F;
+    var used=wrapText(ctx,ln.mine,200,y,W-280,32,2);
+    y+=Math.max(38,used+8);
+  }
+  y+=6;
+  ctx.strokeStyle="#cfc4ad"; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(70,y);ctx.lineTo(W-70,y);ctx.stroke();
+  y+=52;
+  ctx.font="26px "+F;
+  var K=[["ui.liang","liang"],["ui.bing","bing"],["ui.shi","shi"],["ui.jun","jun"]];
+  for(var k=0;k<4;k++){
+    ctx.fillStyle="#5a5348"; ctx.fillText(t(K[k][0]),70+k*250,y);
+    ctx.fillStyle="#23201c"; ctx.font="40px "+F;
+    ctx.fillText(String(S[K[k][1]]),70+k*250,y+48);
+    ctx.font="26px "+F;
+  }
+  y+=118;
+  ctx.fillStyle="#a8321e"; ctx.font="40px "+F;
+  ctx.fillText(t("e."+e),70,y);
+  y+=64;
+  ctx.fillStyle="#8a6d3b"; ctx.font="22px "+F;
+  ctx.fillText(chapNo(14),70,y);
+  y+=38;
+  ctx.fillStyle="#23201c"; ctx.font="28px "+F;
+  wrapText(ctx,S.r14||"",70,y,W-140,38,3);
+  ctx.fillStyle="#5a5348"; ctx.font="20px "+F;
+  ctx.fillText("「发明」孙子兵法 · 十三篇", 70, H-70);
+  try{
+    var url=cv.toDataURL("image/png");
+    var a=document.createElement("a");
+    a.href=url; a.download="sunzi-13.png";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    var m=document.getElementById("sharemsg"); if(m)m.textContent=t("ui.shared");
+    window.__lastCard=url;
+  }catch(err){ try{console.error(err)}catch(e2){} }
+}
+
+/* ---------- 顶栏 ---------- */
+(function(){
+  var bs=document.querySelectorAll("#toneseg button");
+  for(var i=0;i<bs.length;i++) bs[i].onclick=function(){ setTone(this.getAttribute("data-tone")); };
+  document.getElementById("slangbtn").onclick=function(){
+    SLANG=!SLANG;
+    try{localStorage.setItem("sunzi_slang_unlocked",SLANG?"1":"0")}catch(e){}
+    if(!SLANG && TONE==="hei"){ TONE="bai"; try{localStorage.setItem("sunzi_tone","bai")}catch(e){} }
+    syncTone(); render();
+  };
+})();
+var deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",function(ev){
+  ev.preventDefault(); deferredPrompt=ev;
+  var b=document.getElementById("installbtn"); b.removeAttribute("hidden");
+  b.onclick=function(){ if(!deferredPrompt)return; deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){ deferredPrompt=null; b.setAttribute("hidden",""); }); };
+});
+if("serviceWorker" in navigator){
+  window.addEventListener("load",function(){
+    navigator.serviceWorker.register("sw.js").catch(function(e){ try{console.warn("sw",e)}catch(x){} });
+  });
+}
+
+/* ---------- 自检：四表键集恒等 ---------- */
+window.__keycheck=function(){
+  var base=Object.keys(L.bai).sort().join("|"), bad=[];
+  for(var i=0;i<TONES.length;i++){
+    var ks=Object.keys(L[TONES[i]]).sort().join("|");
+    if(ks!==base) bad.push(TONES[i]);
+    for(var k in L[TONES[i]]) if(!L[TONES[i]][k]&&L[TONES[i]][k]!=="") bad.push(TONES[i]+":"+k);
+  }
+  return {count:Object.keys(L.bai).length, mismatch:bad, missingAtRuntime:MISSING};
+};
+window.__game=function(){return S;};
+window.__setState=function(x){S=x;render();};
+
+/* ---------- 启动 ---------- */
+document.documentElement.lang=(TONE==="en")?"en":"zh-Hans";
+S=null; render();
+</script>
+</body>
+</html>

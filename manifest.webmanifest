@@ -1,0 +1,19 @@
+{
+  "id": "/sunzi-13/",
+  "name": "「发明」孙子兵法 · 十三篇",
+  "short_name": "孙子兵法",
+  "description": "十三关，一篇一决策。打完之后，竹简上那十三条是你自己写的《孙子兵法》。",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4efe4",
+  "theme_color": "#f4efe4",
+  "lang": "zh-Hans",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
+    {"src":"icons/maskable-192.png","sizes":"192x192","type":"image/png","purpose":"maskable"},
+    {"src":"icons/maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
+  ]
+}
