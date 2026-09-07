@@ -31,10 +31,10 @@ body{
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
 header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 8px;border-bottom:1px solid var(--line);margin-bottom:14px}
 .brand{font-size:15px;letter-spacing:.06em;color:var(--ink2);margin-right:auto;white-space:nowrap}
-@media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.seg{margin-left:auto}.seg button{padding:6px 8px}}
+@media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.langtone{margin-left:auto}.seg button{padding:6px 8px}}
 .brand b{color:var(--zhu);font-weight:600}
+.langtone{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf8f1}
-#toneseg{margin:-6px 0 14px}
 #toneseg[hidden]{display:none}
 .seg button{appearance:none;border:0;background:transparent;font:inherit;font-size:13px;color:var(--ink2);
   padding:6px 9px;cursor:pointer;min-height:34px;border-right:1px solid var(--line)}
@@ -129,19 +129,21 @@ canvas#share{display:none}
 <div class="wrap">
 <header>
   <div class="brand" id="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
-  <div class="seg" id="langseg">
-    <button data-lang="simp" aria-pressed="true">简体</button>
-    <button data-lang="trad" aria-pressed="false">繁體</button>
-    <button data-lang="en" aria-pressed="false">ENG</button>
+  <div class="langtone">
+    <div class="seg" id="langseg">
+      <button data-lang="simp" aria-pressed="true">简体</button>
+      <button data-lang="trad" aria-pressed="false">繁體</button>
+      <button data-lang="en" aria-pressed="false">ENG</button>
+    </div>
+    <div class="seg" id="toneseg">
+      <button data-tone="wen" aria-pressed="false">文言</button>
+      <button data-tone="bai" aria-pressed="true">白话</button>
+      <button data-tone="hei" aria-pressed="false" hidden>黑话</button>
+    </div>
   </div>
   <button class="iconbtn" id="slangbtn" title="黑话模式">黑</button>
   <button class="iconbtn" id="installbtn" hidden>装</button>
 </header>
-<div class="seg" id="toneseg">
-  <button data-tone="wen" aria-pressed="false">文言</button>
-  <button data-tone="bai" aria-pressed="true">白话</button>
-  <button data-tone="hei" aria-pressed="false" hidden>黑话</button>
-</div>
 <main id="app"></main>
 <footer id="foot"></footer>
 </div>
@@ -857,10 +859,13 @@ function syncTone(){
   }
   var toneseg=document.getElementById("toneseg");
   if(LANG==="en") toneseg.setAttribute("hidden",""); else toneseg.removeAttribute("hidden");
+  var toneLabel={wen:"文言",bai:"白话",hei:"黑话"};
   var bs=document.querySelectorAll("#toneseg button");
   for(var i=0;i<bs.length;i++){var b=bs[i];
-    b.setAttribute("aria-pressed", b.getAttribute("data-tone")===TONE?"true":"false");
-    if(b.getAttribute("data-tone")==="hei"){ if(SLANG)b.removeAttribute("hidden"); else b.setAttribute("hidden",""); }
+    var bt=b.getAttribute("data-tone");
+    b.setAttribute("aria-pressed", bt===TONE?"true":"false");
+    b.textContent = LANG==="trad" ? toTrad(toneLabel[bt]) : toneLabel[bt];
+    if(bt==="hei"){ if(SLANG)b.removeAttribute("hidden"); else b.setAttribute("hidden",""); }
   }
   var sb=document.getElementById("slangbtn");
   sb.style.borderColor = SLANG? "var(--zhu)":"var(--line)";
