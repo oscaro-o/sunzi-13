@@ -34,6 +34,8 @@ header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 8px
 @media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.seg{margin-left:auto}.seg button{padding:6px 8px}}
 .brand b{color:var(--zhu);font-weight:600}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#fbf8f1}
+#toneseg{margin:-6px 0 14px}
+#toneseg[hidden]{display:none}
 .seg button{appearance:none;border:0;background:transparent;font:inherit;font-size:13px;color:var(--ink2);
   padding:6px 9px;cursor:pointer;min-height:34px;border-right:1px solid var(--line)}
 .seg button:last-child{border-right:0}
@@ -126,16 +128,20 @@ canvas#share{display:none}
 <body>
 <div class="wrap">
 <header>
-  <div class="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
-  <div class="seg" id="toneseg">
-    <button data-tone="wen" aria-pressed="false">文言</button>
-    <button data-tone="bai" aria-pressed="true">白话</button>
-    <button data-tone="hei" aria-pressed="false" hidden>黑话</button>
-    <button data-tone="en" aria-pressed="false">ENG</button>
+  <div class="brand" id="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
+  <div class="seg" id="langseg">
+    <button data-lang="simp" aria-pressed="true">简体</button>
+    <button data-lang="trad" aria-pressed="false">繁體</button>
+    <button data-lang="en" aria-pressed="false">ENG</button>
   </div>
   <button class="iconbtn" id="slangbtn" title="黑话模式">黑</button>
   <button class="iconbtn" id="installbtn" hidden>装</button>
 </header>
+<div class="seg" id="toneseg">
+  <button data-tone="wen" aria-pressed="false">文言</button>
+  <button data-tone="bai" aria-pressed="true">白话</button>
+  <button data-tone="hei" aria-pressed="false" hidden>黑话</button>
+</div>
 <main id="app"></main>
 <footer id="foot"></footer>
 </div>
@@ -149,6 +155,8 @@ canvas#share{display:none}
 var TONES=["wen","bai","hei","en"];
 var Q={};
 function q(k,w,b,h,e){Q[k]=[w,b,h,e];}
+/* 简转繁字表：仅覆盖本作用到的字，繁体版按此逐字转换白话/文言/黑话文案 */
+var S2T={"万":"萬","与":"與","专":"專","东":"東","丢":"丟","两":"兩","个":"個","为":"爲","举":"舉","么":"麼","乡":"鄉","书":"書","买":"買","乱":"亂","争":"爭","于":"於","亏":"虧","亲":"親","从":"從","仓":"倉","们":"們","价":"價","众":"衆","优":"優","会":"會","传":"傳","伤":"傷","伪":"僞","余":"餘","侥":"僥","侧":"側","储":"儲","儿":"兒","关":"關","兴":"興","养":"養","内":"內","册":"冊","写":"寫","军":"軍","冲":"衝","决":"決","况":"況","净":"淨","准":"準","减":"減","几":"幾","凭":"憑","击":"擊","划":"劃","则":"則","别":"別","劝":"勸","办":"辦","动":"動","劲":"勁","劳":"勞","势":"勢","匮":"匱","单":"單","占":"佔","却":"卻","历":"歷","厉":"厲","压":"壓","双":"雙","发":"發","变":"變","号":"號","吃":"喫","后":"後","吗":"嗎","听":"聽","启":"啓","吴":"吳","员":"員","团":"團","围":"圍","国":"國","图":"圖","场":"場","块":"塊","坚":"堅","垒":"壘","墙":"牆","处":"處","备":"備","复":"復","够":"夠","头":"頭","夹":"夾","妈":"媽","孙":"孫","学":"學","宁":"寧","实":"實","宽":"寬","对":"對","将":"將","尔":"爾","尝":"嘗","尽":"盡","师":"師","帐":"帳","带":"帶","帮":"幫","帼":"幗","干":"幹","并":"並","库":"庫","应":"應","庙":"廟","开":"開","弃":"棄","张":"張","强":"強","归":"歸","当":"當","录":"錄","怀":"懷","态":"態","怂":"慫","总":"總","恒":"恆","恶":"惡","悦":"悅","悬":"懸","惊":"驚","惨":"慘","愠":"慍","懒":"懶","戏":"戲","战":"戰","扑":"撲","抢":"搶","报":"報","担":"擔","拢":"攏","择":"擇","挤":"擠","挥":"揮","损":"損","换":"換","据":"據","搅":"攪","摆":"擺","摇":"搖","撑":"撐","敌":"敵","数":"數","斗":"鬥","断":"斷","无":"無","时":"時","昼":"晝","显":"顯","机":"機","杀":"殺","权":"權","条":"條","来":"來","极":"極","标":"標","栏":"欄","样":"樣","档":"檔","检":"檢","横":"橫","残":"殘","殚":"殫","毕":"畢","气":"氣","沟":"溝","没":"沒","泽":"澤","洼":"窪","涨":"漲","渐":"漸","游":"遊","湿":"溼","溃":"潰","满":"滿","灭":"滅","灵":"靈","灾":"災","点":"點","烂":"爛","烦":"煩","烧":"燒","爱":"愛","牵":"牽","状":"狀","犹":"猶","现":"現","疮":"瘡","盘":"盤","确":"確","禄":"祿","离":"離","种":"種","积":"積","稳":"穩","笔":"筆","简":"簡","粮":"糧","紧":"緊","约":"約","纪":"紀","纵":"縱","线":"線","组":"組","终":"終","绌":"絀","经":"經","结":"結","绕":"繞","给":"給","络":"絡","绝":"絕","继":"繼","续":"續","绽":"綻","缓":"緩","编":"編","缩":"縮","网":"網","罢":"罷","群":"羣","聪":"聰","胜":"勝","脓":"膿","脚":"腳","脸":"臉","舆":"輿","节":"節","营":"營","虚":"虛","虫":"蟲","虽":"雖","蚁":"蟻","补":"補","装":"裝","见":"見","观":"觀","视":"視","觉":"覺","触":"觸","计":"計","认":"認","让":"讓","训":"訓","议":"議","记":"記","讲":"講","许":"許","诉":"訴","诏":"詔","译":"譯","试":"試","话":"話","该":"該","语":"語","误":"誤","说":"說","请":"請","诸":"諸","读":"讀","课":"課","谁":"誰","谈":"談","谋":"謀","谍":"諜","谏":"諫","谒":"謁","谓":"謂","谗":"讒","谨":"謹","负":"負","财":"財","责":"責","贤":"賢","败":"敗","账":"賬","货":"貨","贪":"貪","贱":"賤","贵":"貴","费":"費","资":"資","赌":"賭","赏":"賞","赐":"賜","赘":"贅","赚":"賺","赢":"贏","赶":"趕","趋":"趨","车":"車","转":"轉","轮":"輪","软":"軟","轻":"輕","载":"載","较":"較","辎":"輜","输":"輸","辙":"轍","边":"邊","过":"過","运":"運","还":"還","这":"這","进":"進","远":"遠","连":"連","迟":"遲","选":"選","遗":"遺","邮":"郵","邻":"鄰","郁":"鬱","里":"裡","钓":"釣","钟":"鍾","钱":"錢","钺":"鉞","钻":"鑽","铺":"鋪","锅":"鍋","锐":"銳","错":"錯","键":"鍵","门":"門","闭":"閉","问":"問","间":"間","闻":"聞","阙":"闕","队":"隊","阳":"陽","阴":"陰","阵":"陣","险":"險","随":"隨","难":"難","雾":"霧","顶":"頂","项":"項","顺":"順","须":"須","顾":"顧","预":"預","领":"領","题":"題","额":"額","风":"風","飘":"飄","饭":"飯","饿":"餓","馆":"館","馈":"饋","马":"馬","驻":"駐","骄":"驕","骑":"騎","鱼":"魚","齐":"齊"};
 
 /* ---------- 界面 ---------- */
 q("ui.title","「发明」孙子兵法","「发明」孙子兵法","「发明」孙子兵法","Inventing the Art of War");
@@ -813,22 +821,42 @@ q("ui.classsubj","课堂","课堂使用","课堂使用","Classroom use");
 var L={wen:{},bai:{},hei:{},en:{}};
 (function(){for(var k in Q){var v=Q[k];for(var i=0;i<4;i++){L[TONES[i]][k]=v[i];}}})();
 var MISSING=[];
+var LANGS=["simp","trad","en"];
+var LANG=(function(){try{return localStorage.getItem("sunzi_lang")||"simp"}catch(e){return "simp"}})();
+if(LANGS.indexOf(LANG)<0)LANG="simp";
 var TONE=(function(){try{return localStorage.getItem("sunzi_tone")||"bai"}catch(e){return "bai"}})();
 if(TONES.indexOf(TONE)<0)TONE="bai";
 var SLANG=(function(){try{return localStorage.getItem("sunzi_slang_unlocked")==="1"}catch(e){return false}})();
 if(TONE==="hei"&&!SLANG)TONE="bai";
+function toTrad(s){
+  var out="";
+  for(var i=0;i<s.length;i++){var c=s.charAt(i); out+=S2T[c]||c;}
+  return out;
+}
 function t(k,vars){
-  var tab=L[TONE]||L.bai, s=tab[k];
+  var s;
+  if(LANG==="en"){ s=L.en[k]; }
+  else { var tab=L[TONE]||L.bai; s=tab[k]; }
   if(s===undefined||s===null){ if(MISSING.indexOf(k)<0)MISSING.push(k);
-    try{console.warn("MISSING KEY",k,TONE);}catch(e){} return "«"+k+"»"; }
+    try{console.warn("MISSING KEY",k,LANG,TONE);}catch(e){} return "«"+k+"»"; }
   if(vars){for(var p in vars){s=s.split("{"+p+"}").join(vars[p]);}}
+  if(LANG==="trad") s=toTrad(s);
   return s;
 }
+function setLang(x){ if(LANGS.indexOf(x)<0)return; LANG=x;
+  try{localStorage.setItem("sunzi_lang",x)}catch(e){}
+  document.documentElement.lang = (x==="en")?"en":(x==="trad"?"zh-Hant":"zh-Hans");
+  syncTone(); render(); }
 function setTone(x){ if(x==="hei"&&!SLANG)return; TONE=x;
   try{localStorage.setItem("sunzi_tone",x)}catch(e){}
-  document.documentElement.lang = (x==="en")?"en":"zh-Hans";
   syncTone(); render(); }
 function syncTone(){
+  var ls=document.querySelectorAll("#langseg button");
+  for(var j=0;j<ls.length;j++){var lb=ls[j];
+    lb.setAttribute("aria-pressed", lb.getAttribute("data-lang")===LANG?"true":"false");
+  }
+  var toneseg=document.getElementById("toneseg");
+  if(LANG==="en") toneseg.setAttribute("hidden",""); else toneseg.removeAttribute("hidden");
   var bs=document.querySelectorAll("#toneseg button");
   for(var i=0;i<bs.length;i++){var b=bs[i];
     b.setAttribute("aria-pressed", b.getAttribute("data-tone")===TONE?"true":"false");
@@ -839,6 +867,10 @@ function syncTone(){
   sb.style.color = SLANG? "var(--zhu)":"var(--ink2)";
   document.getElementById("installbtn").textContent=t("ui.install");
   document.getElementById("foot").textContent=t("ui.foot");
+  var brandTitle=t("ui.title"), brandMark=brandTitle.match(/^「[^」]*」/);
+  var brandEl=document.getElementById("brand");
+  if(brandMark){ brandEl.innerHTML="<b>"+brandMark[0]+"</b>"+brandTitle.slice(brandMark[0].length)+" · "+t("ui.sub"); }
+  else { brandEl.textContent=brandTitle+" · "+t("ui.sub"); }
 }
 
 /* ============================================================
@@ -846,7 +878,7 @@ function syncTone(){
    ============================================================ */
 var CN="〇一二三四五六七八九十".split("");
 function cn(n){ if(n<=10)return CN[n]; return "十"+CN[n-10]; }
-function chapNo(n){ return TONE==="en" ? ("CHAPTER "+n) : ("第"+cn(n)+"篇"); }
+function chapNo(n){ return LANG==="en" ? ("CHAPTER "+n) : ("第"+cn(n)+"篇"); }
 
 var SCENES=[
  {n:1,k:"s1",act:1,intel:{n:8,m:6,c:"jiao"},truth:{n:11,m:4,c:"jin"},opts:[
@@ -984,7 +1016,7 @@ function mapSVG(n){
   var lane = n<=5?3 : (n<=8?1 : (n<=11?2:0));
   function c(i){return lane===i?"#a8321e":"#b6a684";}
   function w(i){return lane===i?2.4:1.4;}
-  var fs = TONE==="en"?9:11;
+  var fs = LANG==="en"?9:11;
   return '<div class="mapwrap"><svg class="map" viewBox="0 0 620 250" role="img" aria-label="舆图">'
   +'<rect x="0" y="0" width="620" height="250" fill="#f7f2e6"/>'
   +'<g stroke="#ddd2b8" stroke-width="1">'
@@ -1254,7 +1286,7 @@ function renderReveal14(){
 
 function fmtTime(sec){
   var m=Math.floor(sec/60), s=sec%60;
-  if(TONE==="en") return m+" min "+s+" s";
+  if(LANG==="en") return m+" min "+s+" s";
   return m+t("ui.min")+s+t("ui.sec");
 }
 function mailto(sub,body){
@@ -1343,7 +1375,7 @@ function makeCard(e){
   ctx.fillStyle="#23201c"; ctx.font="28px "+F;
   wrapText(ctx,S.r14||"",70,y,W-140,38,3);
   ctx.fillStyle="#5a5348"; ctx.font="20px "+F;
-  ctx.fillText("「发明」孙子兵法 · 十三篇", 70, H-70);
+  ctx.fillText(t("ui.title")+" · "+t("ui.sub"), 70, H-70);
   try{
     var url=cv.toDataURL("image/png");
     var a=document.createElement("a");
@@ -1356,6 +1388,8 @@ function makeCard(e){
 
 /* ---------- 顶栏 ---------- */
 (function(){
+  var ls=document.querySelectorAll("#langseg button");
+  for(var j=0;j<ls.length;j++) ls[j].onclick=function(){ setLang(this.getAttribute("data-lang")); };
   var bs=document.querySelectorAll("#toneseg button");
   for(var i=0;i<bs.length;i++) bs[i].onclick=function(){ setTone(this.getAttribute("data-tone")); };
   document.getElementById("slangbtn").onclick=function(){
@@ -1392,7 +1426,8 @@ window.__game=function(){return S;};
 window.__setState=function(x){S=x;render();};
 
 /* ---------- 启动 ---------- */
-document.documentElement.lang=(TONE==="en")?"en":"zh-Hans";
+document.documentElement.lang=(LANG==="en")?"en":(LANG==="trad"?"zh-Hant":"zh-Hans");
+syncTone();
 S=null; render();
 </script>
 </body>
