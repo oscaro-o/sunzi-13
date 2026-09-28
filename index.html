@@ -123,6 +123,27 @@ canvas#share{display:none}
 .big14{font-size:20px;line-height:1.9;margin:18px 0}
 @media (max-width:420px){h1{font-size:23px}.chapname{font-size:19px}.hud .v{font-size:17px}}
 @media (display-mode:standalone){body{padding-top:calc(var(--sp) + 4px)}}
+
+/* ---------------------------------------------------------------
+   trilumi signature — one lockup, four games.
+   The mark and the wordmark are copied from the header of trilumi.xyz
+   so the family reads as one publisher rather than four orphans.
+   Deliberately not translated: a mark that changes with the interface
+   language is not a mark.
+   --------------------------------------------------------------- */
+.tribrand{display:flex;align-items:center;justify-content:center;gap:9px;
+  margin:40px auto 4px;padding-top:14px;border-top:1px solid var(--line);
+  font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
+    "Hiragino Sans GB",sans-serif;line-height:1;text-decoration:none;
+  opacity:.72;transition:opacity .18s ease;-webkit-tap-highlight-color:transparent}
+.tribrand:hover,.tribrand:focus-visible{opacity:1}
+.tribrand svg{display:block;flex:none;width:11px;height:11.7px;fill:#004AAD}
+.tribrand .tbn{font-size:11px;font-weight:700;letter-spacing:.22em;color:#004AAD;
+  padding-left:.11em}
+.tribrand .tbu{font-size:11px;font-weight:400;letter-spacing:.02em;color:var(--ink2)}
+.tribrand .tbu::before{content:"·";margin:0 9px;color:var(--ink2)}
+@media (max-width:430px){.tribrand{flex-wrap:wrap;gap:5px}
+  .tribrand .tbu::before{margin:0 6px}}
 </style>
 </head>
 <body>
@@ -146,6 +167,11 @@ canvas#share{display:none}
 </header>
 <main id="app"></main>
 <footer id="foot"></footer>
+<a class="tribrand" href="https://trilumi.xyz/games/" target="_blank" rel="noopener">
+  <svg viewBox="0 0 100 106" aria-hidden="true" focusable="false"><polygon points="57,0 68.5,21 40,76 18,76"></polygon><polygon points="9,80 63,80 73,98 0,98"></polygon><polygon points="66,33 55,55 79,106 100,106"></polygon></svg>
+  <span class="tbn">TRILUMI</span>
+  <span class="tbu">trilumi.xyz/games</span>
+</a>
 </div>
 <canvas id="share" width="1080" height="1350"></canvas>
 <script>
@@ -1340,7 +1366,7 @@ function makeCard(e){
   for(var q0=0;q0<13;q0++){ var l0=S.lines[q0]; if(!l0)continue;
     Hy += Math.max(38, Math.min(2,Math.ceil(ctx.measureText(l0.mine).width/(W-280)))*32+8); }
   var r14lines=Math.min(3,Math.max(1,Math.ceil(ctx.measureText(S.r14||"").width/(W-140))));
-  var H=Math.max(900, Hy+6+52+118+64+38+r14lines*38+140);
+  var H=Math.max(900, Hy+6+52+118+64+38+r14lines*38+204);
   cv.height=H;
   ctx.fillStyle="#f4efe4"; ctx.fillRect(0,0,W,H);
   ctx.strokeStyle="#cfc4ad"; ctx.lineWidth=3; ctx.strokeRect(30,30,W-60,H-60);
@@ -1379,8 +1405,12 @@ function makeCard(e){
   y+=38;
   ctx.fillStyle="#23201c"; ctx.font="28px "+F;
   wrapText(ctx,S.r14||"",70,y,W-140,38,3);
+  /* footer: the game's own line, then the publisher's signature */
   ctx.fillStyle="#5a5348"; ctx.font="20px "+F;
-  ctx.fillText(t("ui.title")+" · "+t("ui.sub"), 70, H-70);
+  ctx.fillText(t("ui.title")+" · "+t("ui.sub"), 70, H-160);
+  ctx.strokeStyle="#cfc4ad"; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(70,H-132);ctx.lineTo(W-70,H-132);ctx.stroke();
+  TRILUMI.stamp(ctx,70,H-108,{badge:30,word:17,muted:"#8a8073"});
   try{
     var url=cv.toDataURL("image/png");
     var a=document.createElement("a");
@@ -1434,6 +1464,233 @@ window.__setState=function(x){S=x;render();};
 document.documentElement.lang=(LANG==="en")?"en":(LANG==="trad"?"zh-Hant":"zh-Hans");
 syncTone();
 S=null; render();
+
+/* ==========================================================================
+   TRILUMI — brand signature
+   --------------------------------------------------------------------------
+   The lockup is copied from the header of trilumi.xyz, which is the
+   authoritative source:
+
+     mark   three polygons in a 100 x 106 box, painted in one colour
+     word   "TRILUMI", uppercase, letter-spacing .22em
+
+   Both are redrawn by hand here for two reasons: a canvas share card and the
+   page itself must use the same geometry, and every game has to stay a single
+   file with no dependencies.
+
+   Nothing in this block is translated. A brand mark that changes with the
+   interface language is not a brand mark.
+   ========================================================================== */
+var TRILUMI = (function () {
+  var BLUE = '#004AAD';
+  var HREF = 'https://trilumi.xyz/games/';
+  var SANS = '"Segoe UI","Helvetica Neue",Helvetica,"Microsoft YaHei",' +
+             '"PingFang SC","Hiragino Sans GB",Arial,sans-serif';
+
+  /* the three polygons, in the official 100 x 106 space */
+  var POLY = [
+    [[57, 0], [68.5, 21], [40, 76], [18, 76]],
+    [[9, 80], [63, 80], [73, 98], [0, 98]],
+    [[66, 33], [55, 55], [79, 106], [100, 106]]
+  ];
+
+  function path(c, x, y, h, color) {
+    var s = h / 106;
+    c.save();
+    c.translate(x, y);
+    c.scale(s, s);
+    c.fillStyle = color || BLUE;
+    c.beginPath();
+    for (var i = 0; i < 3; i++) {
+      var p = POLY[i];
+      c.moveTo(p[0][0], p[0][1]);
+      for (var j = 1; j < p.length; j++) c.lineTo(p[j][0], p[j][1]);
+      c.closePath();
+    }
+    c.fill();
+    c.restore();
+  }
+
+  function rr(c, x, y, w, h, r) {
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r);
+    c.lineTo(x + w, y + h - r); c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r);
+    c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y);
+    c.closePath();
+  }
+
+  /* The badge — the form that travels. A share card gets forwarded into chat
+     apps and shown as a thumbnail a few hundred pixels wide, so the mark has
+     to survive being scaled down and re-compressed. A solid blue square with
+     white cut-outs does; a hairline of blue polygons does not. */
+  function badge(c, x, y, size) {
+    rr(c, x, y, size, size, size * 0.22);
+    c.fillStyle = BLUE;
+    c.fill();
+    var inner = size * 0.60;
+    path(c, x + (size - inner * 100 / 106) / 2, y + (size - inner) / 2, inner, '#fff');
+  }
+
+  /* "TRILUMI", uppercase, letterspaced. Canvas has no letter-spacing, so the
+     glyphs go down one at a time. Returns the advance width. */
+  function word(c, x, y, size, color, ls) {
+    ls = (ls == null) ? 0.22 : ls;
+    var sp = size * ls, tx = x, s = 'TRILUMI';
+    c.save();
+    c.font = '700 ' + size + 'px ' + SANS;
+    c.fillStyle = color || BLUE;
+    for (var i = 0; i < s.length; i++) {
+      c.fillText(s[i], tx, y);
+      tx += c.measureText(s[i]).width + sp;
+    }
+    c.restore();
+    return tx - sp - x;
+  }
+
+  function wordW(c, size, ls) {
+    ls = (ls == null) ? 0.22 : ls;
+    var w = 0, s = 'TRILUMI';
+    c.save();
+    c.font = '700 ' + size + 'px ' + SANS;
+    for (var i = 0; i < s.length; i++) w += c.measureText(s[i]).width + size * ls;
+    c.restore();
+    return w - size * ls;
+  }
+
+  /* The lockup on a share card: badge + wordmark on one line, the series
+     address under it. Returns the width used, so the caller can right-align
+     the game's own line against it without the two ever colliding. */
+  function stamp(c, x, y, opts) {
+    opts = opts || {};
+    var bs = opts.badge || 34;
+    var ws = opts.word || 19;
+    var gap = opts.gap || 15;
+    badge(c, x, y, bs);
+    var cy = y + bs / 2 + ws * 0.36;
+    var w = bs + gap + word(c, x + bs + gap, cy, ws, opts.color || BLUE);
+    if (opts.url !== false) {
+      c.save();
+      c.font = '400 ' + Math.round(ws * 0.82) + 'px ' + SANS;
+      c.fillStyle = opts.muted || '#8c8478';
+      c.fillText('trilumi.xyz/games', x, y + bs + ws * 1.16);
+      c.restore();
+    }
+    return w;
+  }
+
+  return {
+    BLUE: BLUE, HREF: HREF, SANS: SANS,
+    path: path, badge: badge, word: word, wordW: wordW, rr: rr, stamp: stamp
+  };
+})();
+
+/* ==========================================================================
+   TRILUMI — first-party beacon
+   --------------------------------------------------------------------------
+   Lifted from the tracker that has been running on hetu.trilumi.xyz since the
+   first game, so all four report the same shape of event and one report script
+   can read the whole family.
+
+   Events ride in the query string of a 1x1 GIF; the web server writes them to
+   its access log. No cookie, no external script, no third party, no personal
+   data, nothing that executes. Swapping the backend means changing send() and
+   nothing else.
+
+   OFF by default everywhere except *.trilumi.xyz, so a local copy, a file://
+   open, or the GitHub Pages mirror never reports anything.
+
+   To switch it off entirely, set BEACON to false.
+   ========================================================================== */
+var BEACON = true;
+
+var TRI = (function () {
+  var ON = BEACON && /(^|\.)trilumi\.xyz$/.test(location.hostname);
+  var ENDPOINT = '/_e/p.gif';
+  var SEEN = {};
+
+  /* Each game sets its own slug and language hook. Defaults keep the module
+     harmless if a game forgets. */
+  var GAME = 'game';
+  var lang = function () { return 'en'; };
+
+  var SID = (function () {
+    try {
+      var k = 'tri_sid';
+      var v = sessionStorage.getItem(k);
+      if (!v) {
+        v = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        sessionStorage.setItem(k, v);
+      }
+      return v;
+    } catch (e) { return 'n' + Math.random().toString(36).slice(2, 8); }
+  })();
+
+  function send(ev, extra) {
+    var q = '?e=' + encodeURIComponent(ev) +
+            '&s=' + SID +
+            '&g=' + encodeURIComponent(GAME) +
+            '&l=' + encodeURIComponent(lang());
+    if (extra) { for (var k in extra) q += '&' + k + '=' + encodeURIComponent(extra[k]); }
+    try { new Image().src = ENDPOINT + q + '&_=' + Date.now(); } catch (e) {}
+  }
+
+  /* every call */
+  function track(ev, extra) { if (ON) send(ev, extra); }
+
+  /* once per session — for anything a reload would otherwise double-count */
+  function trackFirst(ev, extra) {
+    if (SEEN[ev]) return;
+    SEEN[ev] = 1;
+    track(ev, extra);
+  }
+
+  function refHost() {
+    try {
+      if (!document.referrer) return 'direct';
+      var h = new URL(document.referrer).hostname;
+      return (h === location.hostname) ? 'self' : h;
+    } catch (e) { return 'unknown'; }
+  }
+
+  function newVisitor() {
+    try {
+      if (localStorage.getItem('tri_seen')) return 0;
+      localStorage.setItem('tri_seen', '1');
+      return 1;
+    } catch (e) { return 1; }
+  }
+
+  function configure(opts) {
+    if (opts && opts.game) GAME = opts.game;
+    if (opts && opts.lang) lang = opts.lang;
+    return { track: track, trackFirst: trackFirst };
+  }
+
+  /* the page-open event, fired once the game has told us who it is */
+  function ready() {
+    if (!ON) return;
+    var d = { r: refHost(), n: newVisitor() };
+    try {
+      var u = new URLSearchParams(location.search).get('utm_source');
+      if (u) d.u = u;
+    } catch (e) {}
+    track('load', d);
+  }
+
+  return {
+    on: ON, track: track, trackFirst: trackFirst,
+    configure: configure, ready: ready, sid: function () { return SID; }
+  };
+})();
+
+/* ---- sunzi-13's settings for the modules above ----------------------
+   LANG here is 'simp' / 'trad' / 'en'; map it to the beacon's vocabulary. */
+TRI.configure({ game: 'sunzi-13', lang: function () {
+  return LANG === 'simp' ? 'zh-Hans' : (LANG === 'trad' ? 'zh-Hant' : 'en');
+} });
+TRI.ready();
 </script>
 </body>
 </html>
