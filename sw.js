@@ -1,6 +1,6 @@
 /* 「发明」孙子兵法 · 十三篇 — service worker
    内容有任何改动都要把 VERSION 加一，否则老访客拿到的是旧缓存。 */
-const VERSION = "sunzi-v3";
+const VERSION = "sunzi-v4";
 const SHELL = [
   "./","./index.html","./manifest.webmanifest",
   "./icons/icon-192.png","./icons/icon-512.png",

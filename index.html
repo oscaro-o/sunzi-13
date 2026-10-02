@@ -30,7 +30,11 @@ body{
 }
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
 header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 8px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.brand{font-size:15px;letter-spacing:.06em;color:var(--ink2);margin-right:auto;white-space:nowrap}
+/* No margin-right:auto here. It used to be what pushed the language controls
+   to the right edge, but the share button now does that with an auto margin on
+   each side — and leaving both in split the free space three ways, which put
+   the button a third of the way across instead of halfway. */
+.brand{font-size:15px;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
 @media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.langtone{margin-left:auto}.seg button{padding:6px 8px}}
 .brand b{color:var(--zhu);font-weight:600}
 .langtone{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
@@ -144,14 +148,31 @@ figure.meme img{display:block;width:100%;height:auto}
     "Hiragino Sans GB",sans-serif;line-height:1;text-decoration:none;
   opacity:.72;transition:opacity .18s ease;-webkit-tap-highlight-color:transparent}
 /* Filled, not outlined. The outline version read as decoration next to the
-   lockup and was invisible until the player was already deep in the game. */
-.trishbtn{display:inline-flex;align-items:center;gap:6px;
+   lockup and was invisible until the player was already deep in the game.
+   It sits in the header now, between the title and the language selector, and
+   the auto margins on both sides are what centre it in that gap: the title
+   carries margin-right:auto too, so flexbox splits the free space three ways
+   and the button lands midway between the two. */
+.trishbtn{display:inline-flex;align-items:center;gap:6px;margin-left:auto;margin-right:auto;
     font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
     "Hiragino Sans GB",sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;
   color:#fff;background:#004AAD;border:1px solid #004AAD;border-radius:4px;
-  padding:8px 15px;min-height:34px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  padding:7px 13px;min-height:34px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .trishbtn:hover,.trishbtn:focus-visible{background:#003B8A;border-color:#003B8A;color:#fff}
 .trishbtn svg{display:block;flex:none;width:13px;height:13px;fill:currentColor}
+@media (max-width:430px){
+  /* A phone has no gap to centre in: the title takes the first row on its own.
+     So the header becomes a grid and the button takes a row of its own between
+     the title and the language controls — title above, share in the middle,
+     language below. Same reading as the desktop row, stacked. */
+  header{display:grid;grid-template-columns:1fr auto auto auto;gap:7px 8px;align-items:center}
+  .brand{grid-column:1/-1;grid-row:1;white-space:normal}
+  .trishbtn{grid-column:1/-1;grid-row:2;justify-self:center;margin:0}
+  .langtone{grid-column:2;grid-row:3;justify-self:end;margin:0}
+  #slangbtn{grid-column:3;grid-row:3;justify-self:end}
+  #installbtn{grid-column:4;grid-row:3;justify-self:end}
+  .seg button{padding:6px 8px}
+}
 .tbv{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;
   letter-spacing:.06em;color:var(--ink2);opacity:.6}
 .tribrand:hover,.tribrand:focus-visible{opacity:1}
@@ -168,6 +189,7 @@ figure.meme img{display:block;width:100%;height:auto}
 <div class="wrap">
 <header>
   <div class="brand" id="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
+  <button class="trishbtn" id="trishbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16.1a3 3 0 0 0-1.9.7l-6-3.5a3 3 0 0 0 0-2.6l6-3.5a3 3 0 1 0-1-2.2 3 3 0 0 0 .1.7l-6 3.5a3 3 0 1 0 0 4.6l6 3.5a3 3 0 1 0 2.8-1.2z"/></svg><span id="trishlabel">分享</span></button>
   <div class="langtone">
     <div class="seg" id="langseg">
       <button data-lang="simp" aria-pressed="true">简体</button>
@@ -191,8 +213,7 @@ figure.meme img{display:block;width:100%;height:auto}
   <span class="tbn">TRILUMI</span>
   <span class="tbu">academy.trilumi.xyz</span>
 </a>
-<button class="trishbtn" id="trishbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16.1a3 3 0 0 0-1.9.7l-6-3.5a3 3 0 0 0 0-2.6l6-3.5a3 3 0 1 0-1-2.2 3 3 0 0 0 .1.7l-6 3.5a3 3 0 1 0 0 4.6l6 3.5a3 3 0 1 0 2.8-1.2z"/></svg><span id="trishlabel">分享</span></button>
-<span class="tbv" id="buildtag">v3</span>
+<span class="tbv" id="buildtag">v4</span>
 </div>
 </div>
 <canvas id="share" width="1080" height="1350"></canvas>
@@ -1670,6 +1691,22 @@ if("serviceWorker" in navigator){
     navigator.serviceWorker.register("sw.js").catch(function(e){ try{console.warn("sw",e)}catch(x){} });
   });
 }
+/* The build tag exists so a deploy can be confirmed from the page itself —
+   which only works if it cannot lie. It reads the service worker's VERSION
+   rather than a hardcoded string, so it always reports what is actually being
+   served. The literal in the markup is only the offline fallback. */
+(function(){
+  var el=document.getElementById("buildtag"); if(!el) return;
+  /* Only over http(s). On file:// the request is blocked by CORS and just
+     writes a scary error into the console for anyone opening the file. */
+  if(location.protocol!=="http:" && location.protocol!=="https:") return;
+  try{
+    fetch("sw.js",{cache:"no-cache"}).then(function(r){ return r.text(); }).then(function(t){
+      var m=t.match(/VERSION\s*=\s*"([^"]+)"/);
+      if(m) el.textContent=m[1].replace(/^sunzi-/,"");
+    }).catch(function(){});
+  }catch(e){}
+})();
 
 /* ---------- 自检：四表键集恒等 ---------- */
 window.__keycheck=function(){
