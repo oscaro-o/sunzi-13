@@ -143,11 +143,17 @@ figure.meme img{display:block;width:100%;height:auto}
   font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
     "Hiragino Sans GB",sans-serif;line-height:1;text-decoration:none;
   opacity:.72;transition:opacity .18s ease;-webkit-tap-highlight-color:transparent}
-.trishbtn{font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
-    "Hiragino Sans GB",sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;
-  color:#004AAD;background:transparent;border:1px solid #004AAD;border-radius:4px;
-  padding:6px 11px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.trishbtn:hover,.trishbtn:focus-visible{background:#004AAD;color:#fff}
+/* Filled, not outlined. The outline version read as decoration next to the
+   lockup and was invisible until the player was already deep in the game. */
+.trishbtn{display:inline-flex;align-items:center;gap:6px;
+    font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
+    "Hiragino Sans GB",sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;
+  color:#fff;background:#004AAD;border:1px solid #004AAD;border-radius:4px;
+  padding:8px 15px;min-height:34px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.trishbtn:hover,.trishbtn:focus-visible{background:#003B8A;border-color:#003B8A;color:#fff}
+.trishbtn svg{display:block;flex:none;width:13px;height:13px;fill:currentColor}
+.tbv{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;
+  letter-spacing:.06em;color:var(--ink2);opacity:.6}
 .tribrand:hover,.tribrand:focus-visible{opacity:1}
 .tribrand svg{display:block;flex:none;width:11px;height:11.7px;fill:#004AAD}
 .tribrand .tbn{font-size:11px;font-weight:700;letter-spacing:.22em;color:#004AAD;
@@ -185,7 +191,8 @@ figure.meme img{display:block;width:100%;height:auto}
   <span class="tbn">TRILUMI</span>
   <span class="tbu">academy.trilumi.xyz</span>
 </a>
-<button class="trishbtn" id="trishbtn" type="button">分享卡</button>
+<button class="trishbtn" id="trishbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16.1a3 3 0 0 0-1.9.7l-6-3.5a3 3 0 0 0 0-2.6l6-3.5a3 3 0 1 0-1-2.2 3 3 0 0 0 .1.7l-6 3.5a3 3 0 1 0 0 4.6l6 3.5a3 3 0 1 0 2.8-1.2z"/></svg><span id="trishlabel">分享</span></button>
+<span class="tbv" id="buildtag">v3</span>
 </div>
 </div>
 <canvas id="share" width="1080" height="1350"></canvas>
@@ -272,6 +279,9 @@ q("ui.exit3s","十三条、四数、结局、并尔之第十四条。","带上�
 q("ui.finalq","谁为尔加此第十四条？","那么，是谁给你加的第十四条？","那么，你这第十四条，是谁给你加的？","So — who added your fourteenth rule?");
 /* 分享卡相关：按钮标签和卡片上的邀请 */
 q("ui.cardbtn","分享卡","分享卡","出图","Share card");
+/* The furniture button. Before the first chapter there is no card to make, so
+   it shares the game itself — the label has to work for both. */
+q("ui.sharenow","分享","分享","分享","Share");
 q("ui.cardcta","尔之第十四条为何？",
   "你也来写你的第十四条 →",
   "你的第十四条呢 →",
@@ -920,10 +930,17 @@ function syncTone(){
   document.getElementById("installbtn").textContent=t("ui.install");
   document.getElementById("foot").textContent=t("ui.foot");
   /* The share button is part of the furniture, so its label follows the
-     interface language like everything else. It hides only before there is any
-     state to put on a card. */
+     interface language like everything else. It used to hide until a chapter
+     had been played, which meant a first-time visitor saw no share button at
+     all and reasonably concluded there wasn't one. Now it is always there:
+     with no state it shares the game, with state it shares your card. */
   var shb=document.getElementById("trishbtn");
-  if(shb){ shb.textContent=t("ui.cardbtn"); shb.style.display=S?"":"none"; }
+  if(shb){
+    var lbl=document.getElementById("trishlabel");
+    var text=t("ui.sharenow");
+    if(lbl) lbl.textContent=text; else shb.textContent=text;
+    shb.style.display="";
+  }
   var brandTitle=t("ui.title"), brandMark=brandTitle.match(/^「[^」]*」/);
   var brandEl=document.getElementById("brand");
   if(brandMark){ brandEl.innerHTML="<b>"+brandMark[0]+"</b>"+brandTitle.slice(brandMark[0].length)+" · "+t("ui.sub"); }
@@ -1367,8 +1384,13 @@ function renderFinal(){
     +'</div><p class="tick" id="sharemsg"></p>'
     +'<div class="row"><button class="btn ghost" id="again">'+esc(t("ui.restart"))+'</button></div>';
   h(body);
-  document.getElementById("sharebtn").onclick=function(){ makeCard(e); };
+  document.getElementById("sharebtn").onclick=function(){ shareNow(e,true); };
   document.getElementById("again").onclick=function(){ clearSave(); S=null; LASTDELTA={}; render(); window.scrollTo(0,0); };
+  /* Paint the card off-screen now, so the share tap can call navigator.share
+     in the same task as the gesture instead of after an await. */
+  try{
+    if(CARD_CACHE.sig !== cardSignature(e,S)) setTimeout(function(){ makeCard(e,"warm"); }, 80);
+  }catch(err){}
 }
 
 /* ---------- 分享卡 canvas → PNG ---------- */
@@ -1384,7 +1406,7 @@ function wrapText(ctx,txt,x,y,maxw,lh,max){
   for(var j=0;j<out.length;j++) ctx.fillText(out[j],x,y+j*lh);
   return out.length*lh;
 }
-function makeCardBody(e,img,ST){
+function makeCardBody(e,img,ST,mode){
   var S=ST;
   var cv=document.getElementById("share"), ctx=cv.getContext("2d");
   var W=1080, F='"Songti SC","Noto Serif CJK SC",Georgia,serif';
@@ -1462,13 +1484,7 @@ function makeCardBody(e,img,ST){
      data: URL frequently does nothing at all — so the player saw no card and
      reasonably concluded there wasn't one. */
   try{ window.__lastCard=cv.toDataURL("image/png"); }catch(err){}
-  try{
-    TRISHARE.open(cv, cardText(e,ST), {
-      lang: (memeLang()==="simp" ? "hans" : memeLang()),
-      filename: "sunzi-13.png",
-      title: t("ui.cardbtn")
-    });
-  }catch(err){ try{console.error(err)}catch(e2){} }
+  publishCard(cv,e,ST,mode);
 }
 
 /* plain text, for the sheet's copy button and for pasting into a chat */
@@ -1481,18 +1497,145 @@ function cardText(e,ST){
   return out.join("\n");
 }
 
+/* ==========================================================================
+   SHARING — one tap, straight to the system sheet
+   --------------------------------------------------------------------------
+   The old flow ended in a download. A download is not a share: on a phone the
+   PNG lands in Files and the player still has to go and post it. Worse, there
+   is no web URL that posts a picture to Instagram — the *only* route to
+   Instagram, WhatsApp, WeChat and the rest is the native sheet, i.e.
+   navigator.share carrying a real file. So that is the default action now, and
+   the preview sheet is what happens when the browser cannot hand a file to
+   another app (most desktops).
+
+   Two details that are easy to get wrong and were:
+
+   - the blob is built the moment the card is drawn, not on the tap. Some
+     browsers only honour navigator.share inside the same task as the gesture,
+     and cv.toBlob is asynchronous — so a first tap that had to render first
+     could be refused. Warm the cache and the tap is synchronous.
+   - AbortError means the player closed the sheet on purpose. That is not a
+     failure and must not fall through to the preview sheet.
+   ========================================================================== */
+var GAMEURL  = "https://artofwar.trilumi.xyz/";
+var CARDNAME = "sunzi-13.png";
+var CARD_CACHE = { sig:"", blob:null, txt:"" };
+
+function sheetLang(){ return memeLang()==="simp" ? "hans" : memeLang(); }
+
+/* the whole state that ends up on the card — if any of it changes, the cached
+   blob is stale and has to be rebuilt */
+function cardSignature(e,ST){
+  return [ e||"", memeLang(),
+           (ST&&ST.lines)?ST.lines.length:0,
+           (ST&&ST.r14)||"",
+           (ST&&ST.liang)||0, (ST&&ST.bing)||0,
+           (ST&&ST.shi)||0,   (ST&&ST.jun)||0 ].join("|");
+}
+
+function fileFor(blob){
+  try{ return new File([blob], CARDNAME, { type:"image/png" }); }catch(err){ return null; }
+}
+function canShareFile(f){
+  try{ return !!(f && navigator.canShare && navigator.canShare({ files:[f] })); }
+  catch(err){ return false; }
+}
+
+/* Where the system sheet is the right answer. On a phone it is: Instagram,
+   WhatsApp and WeChat have no web URL that accepts a picture, so the sheet is
+   the only door to them — and it carries the file. On a desktop the OS flyout
+   is thin and carries nothing, so the preview sheet, which has real link
+   targets, wins instead. */
+function preferNative(){
+  if(!navigator.share) return false;
+  try{ return !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches); }
+  catch(err){ return false; }
+}
+
+/* Hand the file to the OS. Returns true if the attempt was made; onFail runs
+   when the browser refuses for any reason other than the player cancelling.
+   Swallowing every rejection is exactly how a share button ends up doing
+   nothing at all when it is tapped. */
+function nativeShare(blob,txt,title,url,onFail){
+  if(!navigator.share) return false;
+  var f = blob ? fileFor(blob) : null, p;
+  try{
+    if(f && canShareFile(f)) p = navigator.share({ files:[f], title:title, text:txt });
+    else p = navigator.share({ title:title, text:txt, url:url||GAMEURL });
+  }catch(err){ if(onFail) onFail(err); return true; }
+  if(p && p.catch) p.catch(function(err){
+    if(err && err.name === "AbortError") return;   /* closed on purpose */
+    if(onFail) onFail(err);
+  });
+  return true;
+}
+
+function openSheet(cv,txt,opts){
+  try{ TRISHARE.open(cv, txt, opts); }catch(err){ try{ console.error(err); }catch(e2){} }
+}
+
+function cardOpts(txt,blob){
+  /* no `title` here on purpose: the sheet has its own heading in the sheet's
+     own three languages, and letting the game's button label override it made
+     the heading read "分享卡" instead of "你的结果卡片". */
+  return { lang:sheetLang(), filename:CARDNAME, url:GAMEURL, text:txt,
+           shareTitle:t("ui.title")+" · "+t("ui.sub"),
+           blob:blob||null };
+}
+
+/* called from makeCardBody once the canvas is painted */
+function publishCard(cv,e,ST,mode){
+  var txt = cardText(e,ST), sig = cardSignature(e,ST);
+  if(!cv.toBlob){
+    CARD_CACHE = { sig:sig, blob:null, txt:txt };
+    if(mode!=="warm") openSheet(cv,txt,cardOpts(txt,null));
+    return;
+  }
+  cv.toBlob(function(b){
+    CARD_CACHE = { sig:sig, blob:b, txt:txt };
+    if(mode==="warm") return;
+    var o = cardOpts(txt,b);
+    if(preferNative() && nativeShare(b,txt,o.shareTitle,GAMEURL,function(){ openSheet(cv,txt,o); })) return;
+    openSheet(cv,txt,o);
+  }, "image/png");
+}
+
+/* the one entry point every share affordance in the page goes through */
+function shareNow(e,hasState){
+  if(!hasState){ shareGame(); return; }
+  var ST = S, cv = document.getElementById("share");
+  if(CARD_CACHE.sig === cardSignature(e,ST) && CARD_CACHE.blob){
+    /* the card is already painted and already a blob, so this is a synchronous
+       navigator.share inside the tap — the shape every browser accepts */
+    var txt = CARD_CACHE.txt, o = cardOpts(txt,CARD_CACHE.blob);
+    if(preferNative() && nativeShare(CARD_CACHE.blob,txt,o.shareTitle,GAMEURL,function(){ openSheet(cv,txt,o); })) return;
+    openSheet(cv,txt,o);
+    return;
+  }
+  makeCard(e);   /* cold: renders, caches the blob, then shares */
+}
+
+function shareGame(){
+  var txt = t("ui.title")+" · "+t("ui.sub")+"\n"+t("ui.pitch")+"\n"+GAMEURL;
+  var ttl = t("ui.title")+" · "+t("ui.sub");
+  var o = { lang:sheetLang(), filename:CARDNAME, url:GAMEURL, text:txt,
+            shareTitle:ttl };
+  if(preferNative() && nativeShare(null,txt,ttl,GAMEURL,function(){ openSheet(null,txt,o); })) return;
+  openSheet(null,txt,o);
+}
+
 /* The image has to be decoded before it can be drawn, so the real entry point
    waits for it and then paints exactly once. */
-function makeCard(e){
+function makeCard(e,mode){
   var ST = S || {lines:[],liang:0,bing:0,shi:0,jun:0,r14:"",sec:0,t0:Date.now()};
   var src = memeSrc(e);
-  if(!src){ makeCardBody(e,null,ST); return; }
+  if(!src){ makeCardBody(e,null,ST,mode); return; }
 
   var key = e+"|"+memeLang(), im = MEME_IMG[key];
   var fired=false;
-  function go(x){ if(fired) return; fired=true; makeCardBody(e,x,ST); }
+  function go(x){ if(fired) return; fired=true; makeCardBody(e,x,ST,mode); }
 
-  if(im && im.complete && im.naturalWidth){ makeCardBody(e,im,ST); return; }
+  if(im && im.complete && im.naturalWidth){ makeCardBody(e,im,ST,mode); return; }
   if(!im){ im = new Image(); MEME_IMG[key] = im; }
   /* handlers go on before src: a data URL already in the cache can finish
      decoding the instant src is assigned, and an onload attached afterwards
@@ -1553,9 +1696,9 @@ S=null; render();
   var b=document.getElementById("trishbtn");
   if(!b) return;
   b.onclick=function(){
-    var e=null;
-    try{ if(S && S.lines && S.lines.length) e=ending(); }catch(err){ e=null; }
-    makeCard(e);
+    var e=null, has=false;
+    try{ if(S && S.lines && S.lines.length){ e=ending(); has=true; } }catch(err){ e=null; has=false; }
+    shareNow(e,has);
   };
 })();
 
@@ -2065,7 +2208,18 @@ var TRISHARE = (function () {
     '.trish button.p{background:#004AAD;border-color:#004AAD;color:#fff}' +
     '.trish button.w{flex-basis:100%}' +
     '.trish .tg{margin-top:9px;min-height:16px;font-size:12px;color:#3d6b4a}' +
-    '.trish .tg.bad{color:#a8321e}';
+    '.trish .tg.bad{color:#a8321e}' +
+    '.trish .sub{margin:15px 0 7px;font-size:11.5px;letter-spacing:.05em;' +
+      'text-transform:uppercase;color:#a09884}' +
+    '.trish .tgs{display:flex;flex-wrap:wrap;gap:6px}' +
+    '.trish .tgs a{flex:1 1 88px;text-align:center;text-decoration:none;' +
+      'padding:11px 8px;border-radius:6px;border:1px solid #cfc4ad;background:#fff;' +
+      'color:#23201c;font-size:12.5px;font-weight:600;line-height:1.2;' +
+      '-webkit-tap-highlight-color:transparent}' +
+    '.trish .tgs a:hover,.trish .tgs a:focus-visible{border-color:#004AAD;color:#004AAD}' +
+    '.trish button.sh{font-size:14.5px;padding:15px 12px}' +
+    '.trish .acts2{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}' +
+    '.trish .acts2 button{flex:1 1 110px}';
 
   var injected = false;
   function inject() {
@@ -2079,92 +2233,166 @@ var TRISHARE = (function () {
   /* strings, in the three languages the family ships. A game may override
      any of them through opts. */
   var T = {
-    en:   { title: 'Your card', hint: 'Long-press the image to save it, or use Download.',
-            dl: 'Download PNG', cp: 'Copy as text', cl: 'Close',
-            ok: 'Copied to clipboard', bad: 'Could not copy — select the text manually.' },
-    hans: { title: '你的结果卡片', hint: '长按图片保存，或点下面的下载。',
-            dl: '下载图片', cp: '复制文字', cl: '关闭',
-            ok: '已复制到剪贴板', bad: '复制失败，请手动选中文字。' },
-    hant: { title: '你的結果卡片', hint: '長按圖片儲存，或點下面的下載。',
-            dl: '下載圖片', cp: '複製文字', cl: '關閉',
-            ok: '已複製到剪貼簿', bad: '複製失敗，請手動選取文字。' }
+    en:   { title: 'Your card',
+            hint: 'Tap Share to send the picture straight to Instagram, WhatsApp, WeChat, Telegram — anything on your phone. Save image puts it in your photos.',
+            native: 'Share…', dl: 'Save image', cp: 'Copy text', cl: 'Close',
+            ok: 'Copied', bad: 'Could not copy — select the text manually.',
+            sharebad: 'Sharing did not go through — save the image or use a link below.',
+            saved: 'Saved. If nothing happened, long-press the image.',
+            more: 'Send the link instead',
+            morenote: 'These send the link only. Use Share to send the picture.',
+            wa: 'WhatsApp', tg: 'Telegram', x: 'X', fb: 'Facebook', ml: 'Email' },
+    hans: { title: '你的结果卡片',
+            hint: '点「分享」，直接把这张图发到 Instagram、WhatsApp、微信、Telegram——手机上装了什么就能发什么。想存到相册点「保存图片」。',
+            native: '分享…', dl: '保存图片', cp: '复制文字', cl: '关闭',
+            ok: '已复制', bad: '复制失败，请手动选中文字。',
+            sharebad: '分享没走通——存图，或者用下面的链接。',
+            saved: '已保存。没反应就长按图片。',
+            more: '只发链接',
+            morenote: '下面这几个只发链接，要发图片请点上面的「分享」。',
+            wa: 'WhatsApp', tg: 'Telegram', x: 'X', fb: 'Facebook', ml: '邮件' },
+    hant: { title: '你的結果卡片',
+            hint: '點「分享」，直接把這張圖發到 Instagram、WhatsApp、微信、Telegram——手機裝了什麼就能發什麼。想存到相簿點「儲存圖片」。',
+            native: '分享…', dl: '儲存圖片', cp: '複製文字', cl: '關閉',
+            ok: '已複製', bad: '複製失敗，請手動選取文字。',
+            sharebad: '分享沒走通——存圖，或者用下面的連結。',
+            saved: '已儲存。沒反應就長按圖片。',
+            more: '只發連結',
+            morenote: '下面這幾個只發連結，要發圖片請點上面的「分享」。',
+            wa: 'WhatsApp', tg: 'Telegram', x: 'X', fb: 'Facebook', ml: '電郵' }
   };
+
+  var GAME = 'https://artofwar.trilumi.xyz/';
 
   function open(cv, txt, opts) {
     opts = opts || {};
     inject();
     var L = T[opts.lang] || T.en;
     var say = function (k) { return opts[k] || L[k]; };
+    var game = opts.url || GAME;
+    var shareTitle = opts.shareTitle || say('title');
+    var fname = opts.filename || 'trilumi-card.png';
+    var blob = opts.blob || null;
 
     var m = document.createElement('div');
     m.className = 'trish';
-    m.innerHTML =
-      '<div class="box">' +
-        '<h3>' + say('title') + '</h3>' +
-        '<p class="hint">' + say('hint') + '</p>' +
-        '<div class="cvwrap"></div>' +
-        '<div class="acts">' +
-          '<button class="p" data-a="dl">' + say('dl') + '</button>' +
-          '<button data-a="cp">' + say('cp') + '</button>' +
-          '<button class="w" data-a="cl">' + say('cl') + '</button>' +
-        '</div>' +
-        '<p class="tg"></p>' +
-      '</div>';
+    var box = document.createElement('div');
+    box.className = 'box';
+    m.appendChild(box);
 
-    var url;
-    try { url = cv.toDataURL('image/png'); } catch (e) { url = ''; }
-    if (url) {
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = say('title');
-      m.querySelector('.cvwrap').appendChild(img);
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
     }
 
-    var tg = m.querySelector('.tg');
+    box.appendChild(el('h3', null, say('title')));
+    box.appendChild(el('p', 'hint', say('hint')));
+
+    var png = '';
+    if (cv) { try { png = cv.toDataURL('image/png'); } catch (e) { png = ''; } }
+    if (png) {
+      var wrap = el('div', 'cvwrap');
+      var img = document.createElement('img');
+      img.src = png; img.alt = say('title');
+      wrap.appendChild(img);
+      box.appendChild(wrap);
+    }
+
+    var tg = el('p', 'tg');
     function note(msg, bad) {
       tg.textContent = msg;
       tg.className = 'tg' + (bad ? ' bad' : '');
     }
 
-    m.querySelector('[data-a="dl"]').onclick = function () {
-      TRICARD.save(cv, opts.filename || 'trilumi-card.png', function () {
-        note(say('ok'));
-      }, function () {
-        note(say('bad'), true);
-      });
+    /* --- 1. the one button that actually reaches Instagram ------------------
+       Instagram accepts no web URL that carries a picture, so the system sheet
+       is the only route to it. Where the browser can hand over a file this
+       button is the whole answer; where it cannot, the link row below is. */
+    function grabBlob(cb) {
+      if (blob) { cb(blob); return; }
+      if (cv && cv.toBlob) { cv.toBlob(function (b) { blob = b; cb(b); }, 'image/png'); return; }
+      cb(null);
+    }
+    function fire() {
+      var f = null;
+      try { if (blob) f = new File([blob], fname, { type: 'image/png' }); } catch (e) { f = null; }
+      function refused(err) {
+        if (err && err.name === 'AbortError') return;   /* closed on purpose */
+        note(say('sharebad'), true);
+      }
+      try {
+        if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
+          navigator.share({ files: [f], title: shareTitle, text: txt }).catch(refused);
+        } else if (navigator.share) {
+          navigator.share({ title: shareTitle, text: txt, url: game }).catch(refused);
+        } else {
+          note(say('sharebad'), true);
+        }
+      } catch (e) { note(say('sharebad'), true); }
+    }
+
+    var acts = el('div', 'acts');
+    if (navigator.share) {
+      var sh = el('button', 'p w sh', say('native'));
+      sh.onclick = function () { grabBlob(function () { fire(); }); };
+      acts.appendChild(sh);
+    }
+    if (cv) {
+      var dl = el('button', navigator.share ? null : 'p w', say('dl'));
+      dl.onclick = function () {
+        TRICARD.save(cv, fname, function () { note(say('saved')); },
+                              function () { note(say('bad'), true); });
+      };
+      acts.appendChild(dl);
+    }
+    box.appendChild(acts);
+
+    /* --- 2. link targets, for browsers that cannot hand a file to an app ---- */
+    if (game) {
+      box.appendChild(el('p', 'sub', say('more')));
+      box.appendChild(el('p', 'hint', say('morenote')));
+      var enc = encodeURIComponent;
+      var tgs = el('div', 'tgs');
+      var targets = [
+        ['wa', 'https://wa.me/?text=' + enc(txt)],
+        ['tg', 'https://t.me/share/url?url=' + enc(game) + '&text=' + enc(txt)],
+        ['x',  'https://twitter.com/intent/tweet?text=' + enc(txt) + '&url=' + enc(game)],
+        ['fb', 'https://www.facebook.com/sharer/sharer.php?u=' + enc(game)],
+        ['ml', 'mailto:?subject=' + enc(shareTitle) + '&body=' + enc(txt)]
+      ];
+      for (var i = 0; i < targets.length; i++) {
+        var a = document.createElement('a');
+        a.href = targets[i][1];
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = say(targets[i][0]);
+        tgs.appendChild(a);
+      }
+      box.appendChild(tgs);
+    }
+
+    /* --- 3. out ------------------------------------------------------------ */
+    var acts2 = el('div', 'acts2');
+    var cp = el('button', null, say('cp'));
+    cp.onclick = function () {
+      TRICARD.copy(txt, function () { note(say('ok')); }, function () { note(say('bad'), true); });
     };
-    m.querySelector('[data-a="cp"]').onclick = function () {
-      TRICARD.copy(txt, function () { note(say('ok')); },
-                        function () { note(say('bad'), true); });
-    };
-    m.querySelector('[data-a="cl"]').onclick = function () { close(); };
+    var cl = el('button', null, say('cl'));
+    cl.onclick = function () { close(); };
+    acts2.appendChild(cp);
+    acts2.appendChild(cl);
+    box.appendChild(acts2);
+    box.appendChild(tg);
+
     m.onclick = function (e) { if (e.target === m) close(); };
     function onKey(e) { if (e.key === 'Escape') close(); }
     document.addEventListener('keydown', onKey);
-
     function close() {
       document.removeEventListener('keydown', onKey);
       m.remove();
     }
-
-    /* the native sheet, where the browser can hand a file to another app —
-       which on a phone is the actual sharing path */
-    try {
-      if (navigator.canShare && cv.toBlob) {
-        cv.toBlob(function (b) {
-          var f;
-          try { f = new File([b], opts.filename || 'trilumi-card.png', { type: 'image/png' }); }
-          catch (e) { return; }
-          if (!navigator.canShare({ files: [f] })) return;
-          var btn = document.createElement('button');
-          btn.textContent = opts.shareNative || 'Share';
-          btn.onclick = function () {
-            navigator.share({ files: [f], text: txt }).catch(function () {});
-          };
-          m.querySelector('.acts').insertBefore(btn, m.querySelector('[data-a="cl"]'));
-        }, 'image/png');
-      }
-    } catch (e) {}
 
     document.body.appendChild(m);
   }

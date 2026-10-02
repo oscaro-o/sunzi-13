@@ -1,6 +1,6 @@
 /* 「发明」孙子兵法 · 十三篇 — service worker
    内容有任何改动都要把 VERSION 加一，否则老访客拿到的是旧缓存。 */
-const VERSION = "sunzi-v2";
+const VERSION = "sunzi-v3";
 const SHELL = [
   "./","./index.html","./manifest.webmanifest",
   "./icons/icon-192.png","./icons/icon-512.png",
@@ -18,9 +18,15 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   if (req.mode === "navigate") {
-    // 导航：network-first，更新能落地；断网回落缓存
+    // 导航：network-first，更新能落地；断网回落缓存。
+    // 但 network-first 不等于最新：fetch() 默认走 HTTP 缓存，而服务端没有
+    // 发 Cache-Control，浏览器可以自己猜一个新鲜期，于是「明明部署了却看不见」
+    // 就出在这里。导航一律带 no-cache 重新校验，命中 ETag 也只是 304。
+    var fresh;
+    try { fresh = fetch(req, { cache: "no-cache" }); }
+    catch (err) { fresh = fetch(req); }
     e.respondWith(
-      fetch(req).then(r => {
+      fresh.then(r => {
         const copy = r.clone();
         caches.open(VERSION).then(c => c.put(req, copy)).catch(()=>{});
         return r;
