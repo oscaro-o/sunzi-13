@@ -31,9 +31,9 @@ body{
 .wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
 header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 0 8px;border-bottom:1px solid var(--line);margin-bottom:14px}
 /* No margin-right:auto here. It used to be what pushed the language controls
-   to the right edge, but the share button now does that with an auto margin on
+   to the right edge, but the action pair now does that with an auto margin on
    each side — and leaving both in split the free space three ways, which put
-   the button a third of the way across instead of halfway. */
+   the pair a third of the way across instead of halfway. */
 .brand{font-size:15px;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
 @media (max-width:430px){header{gap:6px}.brand{flex:1 0 100%;margin-bottom:2px}.langtone{margin-left:auto}.seg button{padding:6px 8px}}
 .brand b{color:var(--zhu);font-weight:600}
@@ -129,7 +129,51 @@ figure.meme{margin:14px 0 4px;border:1px solid var(--line);border-radius:4px;
   overflow:hidden;background:#fff;line-height:0}
 figure.meme img{display:block;width:100%;height:auto}
 .big14{font-size:20px;line-height:1.9;margin:18px 0}
-@media (max-width:420px){h1{font-size:23px}.chapname{font-size:19px}.hud .v{font-size:17px}}
+/* ---- 兵法榜 ---- */
+.lbcard .lbscore{font-size:34px;line-height:1.15;color:var(--zhu);letter-spacing:.04em}
+.lbcard .lbscore small{font-size:12px;color:var(--ink2);margin-left:7px;letter-spacing:.14em}
+.lbcard .lbtier{font-size:13px;color:var(--ink2);margin-top:2px}
+.lbcard .lbform{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+.lbcard .lbform input{flex:1 1 170px;width:auto;min-width:0}
+.lbcard .lbform .btn{flex:none}
+.lbnote{margin-top:10px;font-size:11.5px;line-height:1.6;opacity:.85}
+.lbwrap{position:fixed;inset:0;z-index:70;background:rgba(35,32,28,.52);
+  display:flex;align-items:flex-start;justify-content:center;padding:22px 12px 40px;overflow:auto}
+.lbpanel{background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  width:100%;max-width:560px;padding:18px 16px 16px;box-shadow:0 18px 50px rgba(35,32,28,.34)}
+.lbpanel h2{font-size:20px;margin:0 0 3px;letter-spacing:.1em;color:var(--zhu)}
+.lbpanel .row{margin-top:16px}
+.lbtable{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+.lbtable th{font-size:11px;letter-spacing:.14em;color:var(--gold);font-weight:400;
+  text-align:left;padding:5px 5px;border-bottom:1px solid var(--line);white-space:nowrap}
+.lbtable td{padding:7px 5px;border-bottom:1px solid #e7dec9;vertical-align:top}
+/* The player's own row has to be findable at a glance. It was #f6efe0 against
+   a #f4efe4 panel — a difference of two in each channel, which is to say no
+   difference at all. A feature that is present but invisible is the same as a
+   feature that is absent, so the row now carries a warm fill and a red rule. */
+.lbtable tr.me td{background:#f0e4c8}
+.lbtable tr.me td:first-child{box-shadow:inset 3px 0 0 var(--zhu)}
+.lbtable tr.me .n{font-weight:600}
+/* Wide enough for 名次 on one line. At 2.4em it broke after the first
+   character and the column read as two rows of heading. */
+.lbtable .r{width:3.4em;white-space:nowrap;color:var(--gold)}
+.lbtable .n{word-break:break-word}
+.lbtable .s{text-align:right;white-space:nowrap}
+.lbtable .en{color:var(--ink2);font-size:12.5px}
+/* The board carries two different claims and must not let them look alike.
+   待有人点开 is something the player said; 引来 N 人 is something that was
+   measured. Different words, different colour, and neither is dressed up as
+   the other. */
+.lbchip{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:3px;
+  font-size:10.5px;line-height:1.6;letter-spacing:.04em;vertical-align:middle;
+  white-space:nowrap;color:var(--ink2);background:#efe7d4;border:1px solid #ded2b6}
+.lbchip.ok{color:#2f5d3a;background:#e7efe2;border-color:#cbdcc3}
+/* the ending screen says 已转正 in place, without a re-render */
+.lbnote.ok{color:#2f5d3a}
+@media (max-width:420px){h1{font-size:23px}.chapname{font-size:19px}.hud .v{font-size:17px}
+  .lbtable{font-size:12.5px}.lbtable .en{font-size:11.5px}
+  .lbchip{font-size:10px;margin-left:4px;padding:1px 4px}
+  .lbtable th,.lbtable td{padding:6px 3px}.lbwrap{padding:14px 8px 30px}}
 @media (display-mode:standalone){body{padding-top:calc(var(--sp) + 4px)}}
 
 /* ---------------------------------------------------------------
@@ -139,39 +183,45 @@ figure.meme img{display:block;width:100%;height:auto}
    Deliberately not translated: a mark that changes with the interface
    language is not a mark.
    --------------------------------------------------------------- */
-/* The lockup and the share button share one row. The rule above them belongs
-   to the row, not to the link, so the button sits inside the same band. */
+/* The lockup and the action pair share one row. The rule above them belongs
+   to the row, not to the link, so the buttons sit inside the same band. */
 .trirow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
   margin:40px auto 4px;padding-top:14px;border-top:1px solid var(--line)}
 .tribrand{display:flex;align-items:center;justify-content:center;gap:9px;
   font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
     "Hiragino Sans GB",sans-serif;line-height:1;text-decoration:none;
   opacity:.72;transition:opacity .18s ease;-webkit-tap-highlight-color:transparent}
-/* Filled, not outlined. The outline version read as decoration next to the
-   lockup and was invisible until the player was already deep in the game.
-   It sits in the header now, between the title and the language selector, and
-   the auto margins on both sides are what centre it in that gap: the title
-   carries margin-right:auto too, so flexbox splits the free space three ways
-   and the button lands midway between the two. */
-.trishbtn{display:inline-flex;align-items:center;gap:6px;margin-left:auto;margin-right:auto;
+/* Share and the leaderboard are one pair, so the auto margins that centre them
+   live on the wrapper. Putting them on the share button alone (where they used
+   to be) would centre the share button and leave the board hanging off its
+   right edge — two buttons that read as one control, positioned as if they
+   were unrelated. */
+.headacts{display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:auto}
+.trishbtn,.lbbtn{display:inline-flex;align-items:center;gap:6px;
     font-family:"Segoe UI",Helvetica,Arial,"Microsoft YaHei","PingFang SC",
     "Hiragino Sans GB",sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;
-  color:#fff;background:#004AAD;border:1px solid #004AAD;border-radius:4px;
-  padding:7px 13px;min-height:34px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  border-radius:4px;padding:7px 13px;min-height:34px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
+.trishbtn{color:#fff;background:#004AAD;border:1px solid #004AAD}
 .trishbtn:hover,.trishbtn:focus-visible{background:#003B8A;border-color:#003B8A;color:#fff}
-.trishbtn svg{display:block;flex:none;width:13px;height:13px;fill:currentColor}
+/* Outlined, not filled: the pair needs one dominant action, and sharing is it.
+   Both filled would read as two equal buttons shouting over each other. */
+.lbbtn{color:#004AAD;background:#fbf8f1;border:1px solid #004AAD}
+.lbbtn:hover,.lbbtn:focus-visible{background:#004AAD;border-color:#004AAD;color:#fff}
+.trishbtn svg,.lbbtn svg{display:block;flex:none;width:13px;height:13px;fill:currentColor}
 @media (max-width:430px){
   /* A phone has no gap to centre in: the title takes the first row on its own.
-     So the header becomes a grid and the button takes a row of its own between
-     the title and the language controls — title above, share in the middle,
+     So the header becomes a grid and the pair takes a row of its own between
+     the title and the language controls — title above, actions in the middle,
      language below. Same reading as the desktop row, stacked. */
   header{display:grid;grid-template-columns:1fr auto auto auto;gap:7px 8px;align-items:center}
   .brand{grid-column:1/-1;grid-row:1;white-space:normal}
-  .trishbtn{grid-column:1/-1;grid-row:2;justify-self:center;margin:0}
+  .headacts{grid-column:1/-1;grid-row:2;justify-self:center;margin:0}
   .langtone{grid-column:2;grid-row:3;justify-self:end;margin:0}
   #slangbtn{grid-column:3;grid-row:3;justify-self:end}
   #installbtn{grid-column:4;grid-row:3;justify-self:end}
   .seg button{padding:6px 8px}
+  .trishbtn,.lbbtn{padding:7px 10px;font-size:11.5px}
 }
 .tbv{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10px;
   letter-spacing:.06em;color:var(--ink2);opacity:.6}
@@ -189,7 +239,10 @@ figure.meme img{display:block;width:100%;height:auto}
 <div class="wrap">
 <header>
   <div class="brand" id="brand"><b>「发明」</b>孙子兵法 · 十三篇</div>
-  <button class="trishbtn" id="trishbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16.1a3 3 0 0 0-1.9.7l-6-3.5a3 3 0 0 0 0-2.6l6-3.5a3 3 0 1 0-1-2.2 3 3 0 0 0 .1.7l-6 3.5a3 3 0 1 0 0 4.6l6 3.5a3 3 0 1 0 2.8-1.2z"/></svg><span id="trishlabel">分享</span></button>
+  <div class="headacts">
+    <button class="trishbtn" id="trishbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 16.1a3 3 0 0 0-1.9.7l-6-3.5a3 3 0 0 0 0-2.6l6-3.5a3 3 0 1 0-1-2.2 3 3 0 0 0 .1.7l-6 3.5a3 3 0 1 0 0 4.6l6 3.5a3 3 0 1 0 2.8-1.2z"/></svg><span id="trishlabel">分享</span></button>
+    <button class="lbbtn" id="lbbtn" type="button"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 13h3v7H4zM10.5 8h3v12h-3zM17 4h3v16h-3z"/></svg><span id="lblabel">兵法榜</span></button>
+  </div>
   <div class="langtone">
     <div class="seg" id="langseg">
       <button data-lang="simp" aria-pressed="true">简体</button>
@@ -213,7 +266,7 @@ figure.meme img{display:block;width:100%;height:auto}
   <span class="tbn">TRILUMI</span>
   <span class="tbu">academy.trilumi.xyz</span>
 </a>
-<span class="tbv" id="buildtag">v4</span>
+<span class="tbv" id="buildtag">v9</span>
 </div>
 </div>
 <canvas id="share" width="1080" height="1350"></canvas>
@@ -227,7 +280,7 @@ var TONES=["wen","bai","hei","en"];
 var Q={};
 function q(k,w,b,h,e){Q[k]=[w,b,h,e];}
 /* 简转繁字表：仅覆盖本作用到的字，繁体版按此逐字转换白话/文言/黑话文案 */
-var S2T={"万":"萬","与":"與","专":"專","东":"東","丢":"丟","两":"兩","个":"個","为":"爲","举":"舉","么":"麼","乡":"鄉","书":"書","买":"買","乱":"亂","争":"爭","于":"於","亏":"虧","亲":"親","从":"從","仓":"倉","们":"們","价":"價","众":"衆","优":"優","会":"會","传":"傳","伤":"傷","伪":"僞","余":"餘","侥":"僥","侧":"側","储":"儲","儿":"兒","关":"關","兴":"興","养":"養","内":"內","册":"冊","写":"寫","军":"軍","冲":"衝","决":"決","况":"況","净":"淨","准":"準","减":"減","几":"幾","凭":"憑","击":"擊","划":"劃","则":"則","别":"別","劝":"勸","办":"辦","动":"動","劲":"勁","劳":"勞","势":"勢","匮":"匱","单":"單","占":"佔","却":"卻","历":"歷","厉":"厲","压":"壓","双":"雙","发":"發","变":"變","号":"號","吃":"喫","后":"後","吗":"嗎","听":"聽","启":"啓","吴":"吳","员":"員","团":"團","围":"圍","国":"國","图":"圖","场":"場","块":"塊","坚":"堅","垒":"壘","墙":"牆","处":"處","备":"備","复":"復","够":"夠","头":"頭","夹":"夾","妈":"媽","孙":"孫","学":"學","宁":"寧","实":"實","宽":"寬","对":"對","将":"將","尔":"爾","尝":"嘗","尽":"盡","师":"師","帐":"帳","带":"帶","帮":"幫","帼":"幗","干":"幹","并":"並","库":"庫","应":"應","庙":"廟","开":"開","弃":"棄","张":"張","强":"強","归":"歸","当":"當","录":"錄","怀":"懷","态":"態","怂":"慫","总":"總","恒":"恆","恶":"惡","悦":"悅","悬":"懸","惊":"驚","惨":"慘","愠":"慍","懒":"懶","戏":"戲","战":"戰","扑":"撲","抢":"搶","报":"報","担":"擔","拢":"攏","择":"擇","挤":"擠","挥":"揮","损":"損","换":"換","据":"據","搅":"攪","摆":"擺","摇":"搖","撑":"撐","敌":"敵","数":"數","斗":"鬥","断":"斷","无":"無","时":"時","昼":"晝","显":"顯","机":"機","杀":"殺","权":"權","条":"條","来":"來","极":"極","标":"標","栏":"欄","样":"樣","档":"檔","检":"檢","横":"橫","残":"殘","殚":"殫","毕":"畢","气":"氣","沟":"溝","没":"沒","泽":"澤","洼":"窪","涨":"漲","渐":"漸","游":"遊","湿":"溼","溃":"潰","满":"滿","灭":"滅","灵":"靈","灾":"災","点":"點","烂":"爛","烦":"煩","烧":"燒","爱":"愛","牵":"牽","状":"狀","犹":"猶","现":"現","疮":"瘡","盘":"盤","确":"確","禄":"祿","离":"離","种":"種","积":"積","稳":"穩","笔":"筆","简":"簡","粮":"糧","紧":"緊","约":"約","纪":"紀","纵":"縱","线":"線","组":"組","终":"終","绌":"絀","经":"經","结":"結","绕":"繞","给":"給","络":"絡","绝":"絕","继":"繼","续":"續","绽":"綻","缓":"緩","编":"編","缩":"縮","网":"網","罢":"罷","群":"羣","聪":"聰","胜":"勝","脓":"膿","脚":"腳","脸":"臉","舆":"輿","节":"節","营":"營","虚":"虛","虫":"蟲","虽":"雖","蚁":"蟻","补":"補","装":"裝","见":"見","观":"觀","视":"視","觉":"覺","触":"觸","计":"計","认":"認","让":"讓","训":"訓","议":"議","记":"記","讲":"講","许":"許","诉":"訴","诏":"詔","译":"譯","试":"試","话":"話","该":"該","语":"語","误":"誤","说":"說","请":"請","诸":"諸","读":"讀","课":"課","谁":"誰","谈":"談","谋":"謀","谍":"諜","谏":"諫","谒":"謁","谓":"謂","谗":"讒","谨":"謹","负":"負","财":"財","责":"責","贤":"賢","败":"敗","账":"賬","货":"貨","贪":"貪","贱":"賤","贵":"貴","费":"費","资":"資","赌":"賭","赏":"賞","赐":"賜","赘":"贅","赚":"賺","赢":"贏","赶":"趕","趋":"趨","车":"車","转":"轉","轮":"輪","软":"軟","轻":"輕","载":"載","较":"較","辎":"輜","输":"輸","辙":"轍","边":"邊","过":"過","运":"運","还":"還","这":"這","进":"進","远":"遠","连":"連","迟":"遲","选":"選","遗":"遺","邮":"郵","邻":"鄰","郁":"鬱","里":"裡","钓":"釣","钟":"鍾","钱":"錢","钺":"鉞","钻":"鑽","铺":"鋪","锅":"鍋","锐":"銳","错":"錯","键":"鍵","门":"門","闭":"閉","问":"問","间":"間","闻":"聞","阙":"闕","队":"隊","阳":"陽","阴":"陰","阵":"陣","险":"險","随":"隨","难":"難","雾":"霧","顶":"頂","项":"項","顺":"順","须":"須","顾":"顧","预":"預","领":"領","题":"題","额":"額","风":"風","飘":"飄","饭":"飯","饿":"餓","馆":"館","馈":"饋","马":"馬","驻":"駐","骄":"驕","骑":"騎","鱼":"魚","齐":"齊"};
+var S2T={"万":"萬","与":"與","专":"專","东":"東","丢":"丟","两":"兩","个":"個","为":"爲","举":"舉","么":"麼","乡":"鄉","书":"書","买":"買","乱":"亂","争":"爭","于":"於","亏":"虧","亲":"親","从":"從","仓":"倉","们":"們","价":"價","众":"衆","优":"優","会":"會","传":"傳","伤":"傷","伪":"僞","余":"餘","侥":"僥","侧":"側","储":"儲","儿":"兒","关":"關","兴":"興","养":"養","内":"內","册":"冊","写":"寫","军":"軍","冲":"衝","决":"決","况":"況","净":"淨","准":"準","减":"減","几":"幾","凭":"憑","击":"擊","划":"劃","则":"則","别":"別","劝":"勸","办":"辦","动":"動","劲":"勁","劳":"勞","势":"勢","匮":"匱","单":"單","占":"佔","却":"卻","历":"歷","厉":"厲","压":"壓","双":"雙","发":"發","变":"變","号":"號","吃":"喫","后":"後","吗":"嗎","听":"聽","启":"啓","吴":"吳","员":"員","团":"團","围":"圍","国":"國","图":"圖","场":"場","块":"塊","坚":"堅","垒":"壘","墙":"牆","处":"處","备":"備","复":"復","够":"夠","头":"頭","夹":"夾","妈":"媽","孙":"孫","学":"學","宁":"寧","实":"實","宽":"寬","对":"對","将":"將","尔":"爾","尝":"嘗","尽":"盡","师":"師","帐":"帳","带":"帶","帮":"幫","帼":"幗","干":"幹","并":"並","库":"庫","应":"應","庙":"廟","开":"開","弃":"棄","张":"張","强":"強","归":"歸","当":"當","录":"錄","怀":"懷","态":"態","怂":"慫","总":"總","恒":"恆","恶":"惡","悦":"悅","悬":"懸","惊":"驚","惨":"慘","愠":"慍","懒":"懶","戏":"戲","战":"戰","扑":"撲","抢":"搶","报":"報","担":"擔","拢":"攏","择":"擇","挤":"擠","挥":"揮","损":"損","换":"換","据":"據","搅":"攪","摆":"擺","摇":"搖","撑":"撐","敌":"敵","数":"數","斗":"鬥","断":"斷","无":"無","时":"時","昼":"晝","显":"顯","机":"機","杀":"殺","权":"權","条":"條","来":"來","极":"極","标":"標","栏":"欄","样":"樣","档":"檔","检":"檢","横":"橫","残":"殘","殚":"殫","毕":"畢","气":"氣","沟":"溝","没":"沒","泽":"澤","洼":"窪","涨":"漲","渐":"漸","游":"遊","湿":"溼","溃":"潰","满":"滿","灭":"滅","灵":"靈","灾":"災","点":"點","烂":"爛","烦":"煩","烧":"燒","爱":"愛","牵":"牽","状":"狀","犹":"猶","现":"現","疮":"瘡","盘":"盤","确":"確","禄":"祿","离":"離","种":"種","积":"積","稳":"穩","笔":"筆","简":"簡","粮":"糧","紧":"緊","约":"約","纪":"紀","纵":"縱","线":"線","组":"組","终":"終","绌":"絀","经":"經","结":"結","绕":"繞","给":"給","络":"絡","绝":"絕","继":"繼","续":"續","绽":"綻","缓":"緩","编":"編","缩":"縮","网":"網","罢":"罷","群":"羣","聪":"聰","胜":"勝","脓":"膿","脚":"腳","脸":"臉","舆":"輿","节":"節","营":"營","虚":"虛","虫":"蟲","虽":"雖","蚁":"蟻","补":"補","装":"裝","见":"見","观":"觀","视":"視","觉":"覺","触":"觸","计":"計","认":"認","让":"讓","训":"訓","议":"議","记":"記","讲":"講","许":"許","诉":"訴","诏":"詔","译":"譯","试":"試","话":"話","该":"該","语":"語","误":"誤","说":"說","请":"請","诸":"諸","读":"讀","课":"課","谁":"誰","谈":"談","谋":"謀","谍":"諜","谏":"諫","谒":"謁","谓":"謂","谗":"讒","谨":"謹","负":"負","财":"財","责":"責","贤":"賢","败":"敗","账":"賬","货":"貨","贪":"貪","贱":"賤","贵":"貴","费":"費","资":"資","赌":"賭","赏":"賞","赐":"賜","赘":"贅","赚":"賺","赢":"贏","赶":"趕","趋":"趨","车":"車","转":"轉","轮":"輪","软":"軟","轻":"輕","载":"載","较":"較","辎":"輜","输":"輸","辙":"轍","边":"邊","过":"過","运":"運","还":"還","这":"這","进":"進","远":"遠","连":"連","迟":"遲","选":"選","遗":"遺","邮":"郵","邻":"鄰","郁":"鬱","里":"裡","钓":"釣","钟":"鍾","钱":"錢","钺":"鉞","钻":"鑽","铺":"鋪","锅":"鍋","锐":"銳","错":"錯","键":"鍵","门":"門","闭":"閉","问":"問","间":"間","闻":"聞","阙":"闕","队":"隊","阳":"陽","阴":"陰","阵":"陣","险":"險","随":"隨","难":"難","雾":"霧","顶":"頂","项":"項","顺":"順","须":"須","顾":"顧","预":"預","领":"領","题":"題","额":"額","风":"風","飘":"飄","饭":"飯","饿":"餓","馆":"館","馈":"饋","马":"馬","驻":"駐","骄":"驕","骑":"騎","鱼":"魚","齐":"齊","踪":"蹤","联":"聯","绩":"績","长":"長","称":"稱","参":"參","仅":"僅","荣":"榮","誉":"譽","谦":"謙","竞":"競","赛":"賽","暂":"暫","链":"鏈"};
 
 /* ---------- 界面 ---------- */
 q("ui.title","「发明」孙子兵法","「发明」孙子兵法","「发明」孙子兵法","Inventing the Art of War");
@@ -895,6 +948,91 @@ q("ui.final","终","终局","结算","FINAL");
 q("ui.emailsubj","第十四条","第十四条","第十四条","The Fourteenth Rule");
 q("ui.classsubj","课堂","课堂使用","课堂使用","Classroom use");
 
+/* ---------- 兵法榜 ---------- */
+q("ui.lb","兵法榜","兵法榜","兵法榜","Leaderboard");
+q("ui.lb.sub",
+ "十三篇毕，较其功。榜上唯名号、结局、余力、历时。",
+ "打完一局就能上榜。榜上只有名号、结局、余力和用时。",
+ "打完一局就能上墙。榜上只有名号、结局、余力、用时。",
+ "Finish a run and put it on the board: your name, your ending, what you had left, and how long it took.");
+q("ui.lb.pts","分","分","分","pts");
+q("ui.lb.rank","名次","名次","排名","Rank");
+q("ui.lb.who","名号","名号","谁","Name");
+q("ui.lb.ending","结局","结局","结局","Ending");
+q("ui.lb.name","留名（可空）","留个名，可留空","留个名，不填也行","Your name (optional)");
+q("ui.lb.submit","上书","上榜","上墙","Put me on the board");
+q("ui.lb.sending","上书之中……","正在上榜……","上传中……","Submitting…");
+q("ui.lb.ranked",
+ "已上书，暂列。居第 {r} 位，共 {n} 人。",
+ "上榜了（暂定）。你排第 {r}，榜上共 {n} 人。",
+ "上了，暂定。第 {r} 名，共 {n} 人。",
+ "You are on the board — #{r} of {n}, provisionally.");
+q("ui.lb.loading","取榜中……","正在取榜……","拉榜中……","Loading the board…");
+q("ui.lb.empty",
+ "榜上无人。尔可为第一。",
+ "榜上还没有人，你可以是第一个。",
+ "榜是空的，你上就是第一。",
+ "Nobody is on the board yet. Be the first.");
+q("ui.lb.err",
+ "取榜不得。稍后再试。",
+ "榜单没取到，等会儿再试。",
+ "榜拉不下来，待会儿再试。",
+ "Could not reach the board. Try again in a moment.");
+q("ui.lb.offline",
+ "此榜须在线上观之。",
+ "榜单要联网才能看。",
+ "离线看不了榜。",
+ "The board needs a connection.");
+q("ui.lb.close","合上","关掉","收起","Close");
+q("ui.lb.anon","无名氏","无名氏","路人甲","Anonymous");
+q("ui.lb.total","榜上共 {n} 人。","榜上共 {n} 人。","一共 {n} 人。","{n} on the board.");
+q("ui.lb.res","余力","余力","剩的","left");
+q("ui.lb.top","观榜","看天下人的成绩","看看别人打成啥样","See the board");
+/* The old wording said "no tracking". Once a row carries a token and arrivals
+   are counted, that sentence stops being true — so it says what is actually
+   kept instead. A promise that quietly expires is worse than no promise. */
+q("ui.lb.note",
+ "所存者：名号、结局、余力、历时，及尔链被点开之数。只计人次，不留地址。",
+ "只存你填的名号、结局、余力和用时，以及你分享的链接被点开了几次。计数不留 IP。",
+ "只存名号、结局、余力、用时，还有你那条链接被点开几次。计数不留 IP。",
+ "Stored: the name you type, your ending, what you had left, how long it took, and how many times your shared link was opened — counted anonymously, no address kept.");
+
+/* ---------- 上榜门禁：分享，才上榜 ---------- */
+q("ui.lb.share2post","分享而后上榜","分享并上榜","分享才上榜","Share to get on the board");
+q("ui.lb.gate",
+ "上榜须先分享。点之，此局乃出；分享毕，榜上暂列。有人由尔所分享之链而入，则转正。",
+ "上榜要先分享。点一下把这一局发出去，分享走完才会上榜（暂定）。有人点开你分享的链接，就转正。",
+ "上榜得先分享。点一下把这一局发出去，分享走完才上榜（暂定）。有人点开你那条链接，就转正。",
+ "Getting on the board takes a share. Tap to send this run out; once it goes, you are on — provisionally. When somebody opens the link you shared, you are confirmed.");
+q("ui.lb.noshare",
+ "分享未毕，故未上榜。可再试。",
+ "分享没走完，所以还没上榜。可以再试一次。",
+ "分享没走完，还没上榜。再试一次吧。",
+ "The share did not go through, so you are not on the board yet. Try again.");
+q("ui.lb.ranknote",
+ "暂列于榜。有人由尔之链而入，则转正。",
+ "现在是暂定的。有人点开你的链接，就转正。",
+ "现在算暂定。有人点开你那条链接，就转正。",
+ "Provisional. When somebody opens your link, it becomes confirmed.");
+q("ui.lb.brought","引来 {n} 人","引来 {n} 人","引来 {n} 人","brought {n}");
+q("ui.lb.pending","待有人点开","待有人点开","等有人点","awaiting a click");
+q("ui.lb.confirmed","已转正","已转正","已转正","confirmed");
+q("ui.lb.promoted",
+ "有人由尔之链而入，已转正。",
+ "有人点开你的链接了，已转正。",
+ "有人点开你那条链接，转正了。",
+ "Somebody opened your link — you are confirmed.");
+/* 「复制」 is deliberately avoided in all three tones: 制 is mapped to nothing
+   in S2T on purpose (编制 / 制胜 / 制两道 are all correct with 制), so 复制
+   would come out as 復制 in Traditional. 取 needs no mapping at all. */
+q("ui.lb.copylink","取其链","取我的链接","取我那条链接","Copy my link");
+q("ui.lb.copied","已录，可粘之","已取到，去粘贴吧","取到了，去粘吧","Copied — paste it anywhere");
+q("ui.lb.copybad",
+ "取之不得，请手动择之。",
+ "取不到，手动选中吧。",
+ "取不到，手动选一下。",
+ "Could not copy — select it manually.");
+
 /* ============================================================
    语气表：由 Q 生成 L.wen / L.bai / L.hei / L.en，键集恒等
    ============================================================ */
@@ -961,6 +1099,16 @@ function syncTone(){
     var text=t("ui.sharenow");
     if(lbl) lbl.textContent=text; else shb.textContent=text;
     shb.style.display="";
+  }
+  /* The board is a sibling of the share button and follows the interface
+     language the same way. It is never hidden: a leaderboard nobody can find
+     is the same as no leaderboard. */
+  var lbb=document.getElementById("lbbtn");
+  if(lbb){
+    var llbl=document.getElementById("lblabel");
+    var ltext=t("ui.lb");
+    if(llbl) llbl.textContent=ltext; else lbb.textContent=ltext;
+    lbb.style.display="";
   }
   var brandTitle=t("ui.title"), brandMark=brandTitle.match(/^「[^」]*」/);
   var brandEl=document.getElementById("brand");
@@ -1147,7 +1295,10 @@ function mapSVG(n){
 }
 
 /* ---------- 组件 ---------- */
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+/* null and undefined render as nothing. String(undefined) is the literal text
+   "undefined", so an omitted field used to print the word into the page — which
+   is how a missing value turns into a visible bug instead of a blank. */
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function nl(s){return esc(s).replace(/\n/g,"<br>");}
 function hud(){
   var K=[["liang","ui.liang"],["bing","ui.bing"],["shi","ui.shi"],["jun","ui.jun"]];
@@ -1403,10 +1554,12 @@ function renderFinal(){
     +'<a href="'+mailto(t("ui.classsubj"),"")+'">'+esc(t("ui.exit2"))+'<small>'+esc(t("ui.exit2s"))+'</small></a>'
     +'<button id="sharebtn">'+esc(t("ui.share"))+'<small>'+esc(t("ui.exit3s"))+'</small></button>'
     +'</div><p class="tick" id="sharemsg"></p>'
+    + lbFinalCard(e)
     +'<div class="row"><button class="btn ghost" id="again">'+esc(t("ui.restart"))+'</button></div>';
   h(body);
   document.getElementById("sharebtn").onclick=function(){ shareNow(e,true); };
   document.getElementById("again").onclick=function(){ clearSave(); S=null; LASTDELTA={}; render(); window.scrollTo(0,0); };
+  lbFinalWire(e);
   /* Paint the card off-screen now, so the share tap can call navigator.share
      in the same task as the gesture instead of after an await. */
   try{
@@ -1513,7 +1666,11 @@ function cardText(e,ST){
   var out=[t("ui.title")+" · "+t("ui.sub")];
   if(e) out.push(t("e."+e));
   if(ST && ST.r14) out.push(t("ui.finalq")+" "+ST.r14);
-  out.push("artofwar.trilumi.xyz");
+  /* A leaderboard share carries the player's token so the arrival can be
+     counted; every other share carries the bare address. The card image is
+     the same either way — the token lives in the text, not in the picture,
+     because a token baked into a PNG is a token nobody can click. */
+  out.push(LB_SHARE ? LB_SHARE.url : "artofwar.trilumi.xyz");
   out.push("academy.trilumi.xyz");
   return out.join("\n");
 }
@@ -1577,31 +1734,43 @@ function preferNative(){
    when the browser refuses for any reason other than the player cancelling.
    Swallowing every rejection is exactly how a share button ends up doing
    nothing at all when it is tapped. */
-function nativeShare(blob,txt,title,url,onFail){
+function nativeShare(blob,txt,title,url,onFail,onOK,onCancel){
   if(!navigator.share) return false;
   var f = blob ? fileFor(blob) : null, p;
   try{
     if(f && canShareFile(f)) p = navigator.share({ files:[f], title:title, text:txt });
     else p = navigator.share({ title:title, text:txt, url:url||GAMEURL });
   }catch(err){ if(onFail) onFail(err); return true; }
-  if(p && p.catch) p.catch(function(err){
-    if(err && err.name === "AbortError") return;   /* closed on purpose */
+  if(p && p.then) p.then(function(){
+    if(onOK) onOK();
+  }, function(err){
+    /* AbortError means the sheet was closed on purpose. It is not a failure,
+       so it must not fall through to the preview sheet — but it is not a share
+       either, and the leaderboard gate has to hear about it or the player is
+       left holding a button that never comes back. Hence a third callback
+       rather than folding it into onFail. */
+    if(err && err.name === "AbortError"){ if(onCancel) onCancel(); return; }
     if(onFail) onFail(err);
   });
   return true;
 }
 
+/* Returns whether a share surface actually appeared. The gate needs to know:
+   if nothing can be shown, refusing to submit would lock the player out of a
+   feature for a reason they cannot see or fix. */
 function openSheet(cv,txt,opts){
-  try{ TRISHARE.open(cv, txt, opts); }catch(err){ try{ console.error(err); }catch(e2){} }
+  try{ TRISHARE.open(cv, txt, opts); return true; }
+  catch(err){ try{ console.error(err); }catch(e2){} return false; }
 }
 
 function cardOpts(txt,blob){
   /* no `title` here on purpose: the sheet has its own heading in the sheet's
      own three languages, and letting the game's button label override it made
      the heading read "分享卡" instead of "你的结果卡片". */
-  return { lang:sheetLang(), filename:CARDNAME, url:GAMEURL, text:txt,
+  return { lang:sheetLang(), filename:CARDNAME, url:shareURL(), text:txt,
            shareTitle:t("ui.title")+" · "+t("ui.sub"),
-           blob:blob||null };
+           blob:blob||null,
+           onShared:lbShared, onClose:lbShareClosed, onCancel:lbShareCanceled };
 }
 
 /* called from makeCardBody once the canvas is painted */
@@ -1616,33 +1785,39 @@ function publishCard(cv,e,ST,mode){
     CARD_CACHE = { sig:sig, blob:b, txt:txt };
     if(mode==="warm") return;
     var o = cardOpts(txt,b);
-    if(preferNative() && nativeShare(b,txt,o.shareTitle,GAMEURL,function(){ openSheet(cv,txt,o); })) return;
+    if(preferNative() && nativeShare(b,txt,o.shareTitle,o.url,function(){ openSheet(cv,txt,o); },lbShared,o.onCancel)) return;
     openSheet(cv,txt,o);
   }, "image/png");
 }
 
-/* the one entry point every share affordance in the page goes through */
+/* the one entry point every share affordance in the page goes through.
+   Returns true when a share surface was actually presented — see openSheet(). */
 function shareNow(e,hasState){
-  if(!hasState){ shareGame(); return; }
+  if(!hasState){ return shareGame(); }
   var ST = S, cv = document.getElementById("share");
   if(CARD_CACHE.sig === cardSignature(e,ST) && CARD_CACHE.blob){
     /* the card is already painted and already a blob, so this is a synchronous
-       navigator.share inside the tap — the shape every browser accepts */
-    var txt = CARD_CACHE.txt, o = cardOpts(txt,CARD_CACHE.blob);
-    if(preferNative() && nativeShare(CARD_CACHE.blob,txt,o.shareTitle,GAMEURL,function(){ openSheet(cv,txt,o); })) return;
-    openSheet(cv,txt,o);
-    return;
+       navigator.share inside the tap — the shape every browser accepts.
+       The cached TEXT is not reused when a leaderboard share is in flight: the
+       blob was painted before the token existed, and the token lives in the
+       text. The picture is identical either way. */
+    var txt = LB_SHARE ? cardText(e,ST) : CARD_CACHE.txt;
+    var o = cardOpts(txt,CARD_CACHE.blob);
+    if(preferNative() && nativeShare(CARD_CACHE.blob,txt,o.shareTitle,o.url,function(){ openSheet(cv,txt,o); },lbShared,o.onCancel)) return true;
+    return openSheet(cv,txt,o);
   }
   makeCard(e);   /* cold: renders, caches the blob, then shares */
+  return true;
 }
 
 function shareGame(){
   var txt = t("ui.title")+" · "+t("ui.sub")+"\n"+t("ui.pitch")+"\n"+GAMEURL;
   var ttl = t("ui.title")+" · "+t("ui.sub");
   var o = { lang:sheetLang(), filename:CARDNAME, url:GAMEURL, text:txt,
-            shareTitle:ttl };
-  if(preferNative() && nativeShare(null,txt,ttl,GAMEURL,function(){ openSheet(null,txt,o); })) return;
-  openSheet(null,txt,o);
+            shareTitle:ttl, onShared:lbShared, onClose:lbShareClosed,
+            onCancel:lbShareCanceled };
+  if(preferNative() && nativeShare(null,txt,ttl,GAMEURL,function(){ openSheet(null,txt,o); },lbShared,o.onCancel)) return true;
+  return openSheet(null,txt,o);
 }
 
 /* The image has to be decoded before it can be drawn, so the real entry point
@@ -1720,6 +1895,411 @@ window.__keycheck=function(){
 };
 window.__game=function(){return S;};
 window.__setState=function(x){S=x;render();};
+
+/* ==========================================================================
+   兵法榜 — the family's first server-side feature
+   --------------------------------------------------------------------------
+   The page stays one file with no external script. The board is two PHP
+   endpoints under /_lb/ on the same origin, so there is nothing to load and
+   nothing to wait for until a player actually asks for it.
+
+   The client never sends a score. It sends the ending, the four resources and
+   the time; the server recomputes with the same rule as lbScore() below. A
+   hand-made request can therefore lie about a run, but cannot invent a number,
+   and the numbers on the board stay internally consistent. The two rules are
+   one rule written twice — change one, change the other (brand/lb/lib.php).
+   ========================================================================== */
+var LB_API = "/_lb/";
+var LB_VER = "v9";   /* fallback only — see lbVer() */
+var LB_TIER = {shan:5,gong:3,jiu:2,luan:1,beng:0};
+var LB_STATE = {list:null,total:0,busy:false,err:null,rank:null,on:false};
+/* A local copy opened from disk has no server to talk to. Saying so is better
+   than a button that silently does nothing. */
+LB_STATE.on = /^https?:$/.test(location.protocol) && typeof fetch==="function";
+
+/* --------------------------------------------------------------------------
+   THE SHARE GATE
+   --------------------------------------------------------------------------
+   A share cannot be verified. navigator.share resolves with undefined, the
+   intent links report nothing at all, and the platform APIs that could confirm
+   a post cost money and want a login first. What the page CAN observe is that
+   the player took a route out of the share sheet, so that is the gate: take a
+   route, get on the board.
+
+   Then a second, stronger thing is observed. The link they shared carries a
+   token, and a row is only 转正 once a distinct visitor has arrived through
+   it. So the board shows two different claims and does not confuse them:
+   "he shared" (claimed, unverifiable) and "somebody came" (measured).
+
+   LB_SHARE holds the in-flight share. It exists only between the tap and the
+   moment the sheet reports a route out, and it is what makes the shared URL
+   carry the token instead of the bare address.
+
+   Three hooks, not two, because "closed" and "cancelled" are the same thing
+   here but arrive by different routes: the preview sheet reports a close, the
+   system sheet reports an AbortError. Both mean the player backed out, so
+   both mean no submit. Where no share surface can be shown at all the gate is
+   not applied — a gate nobody can pass is not a gate, it is a wall.
+   -------------------------------------------------------------------------- */
+var LB_SHARE = null;
+
+function lbTok(){
+  var A="abcdefghijklmnopqrstuvwxyz0123456789", s="";
+  for(var i=0;i<24;i++) s+=A.charAt(Math.floor(Math.random()*A.length));
+  return s;
+}
+/* read by cardText() and cardOpts(), which sit above this module */
+function shareURL(){ return LB_SHARE ? LB_SHARE.url : GAMEURL; }
+function lbShared(){ if(LB_SHARE && LB_SHARE.onShared) LB_SHARE.onShared(); }
+function lbShareClosed(){ if(LB_SHARE && LB_SHARE.onClose) LB_SHARE.onClose(); }
+/* the system sheet was dismissed. Same meaning to the gate as a close: the
+   player backed out, so nothing was shared and nothing should be submitted. */
+function lbShareCanceled(){ if(LB_SHARE && LB_SHARE.onCancel) LB_SHARE.onCancel(); }
+
+function lbRes(st){ return Math.max(0, Math.min(470,
+  (st.liang||0)+(st.bing||0)+(st.shi||0)+(st.jun||0))); }
+function lbSec(st){
+  if(st.sec) return st.sec;
+  return Math.max(0, Math.round((Date.now()-(st.t0||Date.now()))/1000));
+}
+function lbSpeed(sec){ return Math.max(0, Math.min(200, Math.round((1800-sec)/9))); }
+function lbScore(e,st){ return (LB_TIER[e]||0)*1000 + lbRes(st) + lbSpeed(lbSec(st)); }
+
+/* The player id is a random string in this browser's storage. It is what lets
+   the server show one row per person — the best one — instead of one row per
+   attempt. It is not an account and carries nothing about who the player is. */
+function lbPid(){
+  try{
+    var v=localStorage.getItem("sunzi_pid");
+    if(v && /^[a-z0-9]{8,32}$/.test(v)) return v;
+    var A="abcdefghijklmnopqrstuvwxyz0123456789", s="";
+    for(var i=0;i<24;i++) s+=A.charAt(Math.floor(Math.random()*A.length));
+    localStorage.setItem("sunzi_pid",s);
+    return s;
+  }catch(e){
+    if(!window.__lbpid) window.__lbpid="p"+Math.random().toString(36).slice(2,12);
+    return window.__lbpid;
+  }
+}
+function lbName(){ try{ return localStorage.getItem("sunzi_name")||""; }catch(e){ return ""; } }
+function lbSaveName(v){ try{ localStorage.setItem("sunzi_name",v); }catch(e){} }
+
+/* Which build a row came from, taken from the same element the page uses to
+   show it. A fourth hardcoded version string would be a fourth thing to forget
+   to bump, and the first three already disagree often enough. */
+function lbVer(){
+  var el=document.getElementById("buildtag");
+  var v=el?el.textContent.trim():"";
+  return "sunzi-"+(/^v\d+$/.test(v)?v:LB_VER);
+}
+
+function lbFetch(path,opts,ms){
+  if(!LB_STATE.on) return Promise.reject(new Error("offline"));
+  var ctl=(typeof AbortController!=="undefined")?new AbortController():null;
+  var timer=setTimeout(function(){ if(ctl) ctl.abort(); }, ms||9000);
+  var o=opts||{};
+  if(ctl) o.signal=ctl.signal;
+  return fetch(LB_API+path,o).then(function(r){
+    clearTimeout(timer);
+    if(!r.ok) throw new Error("http "+r.status);
+    return r.json();
+  },function(err){ clearTimeout(timer); throw err; });
+}
+
+/* ---------- 榜面 ---------- */
+function lbPanel(){
+  var el=document.getElementById("lbwrap");
+  if(el) return el;
+  el=document.createElement("div");
+  el.className="lbwrap"; el.id="lbwrap";
+  el.setAttribute("role","dialog"); el.setAttribute("aria-modal","true");
+  el.innerHTML='<div class="lbpanel" id="lbpanel"></div>';
+  /* clicking the dimmed area closes it; clicking the panel must not */
+  el.addEventListener("click",function(ev){ if(ev.target===el) lbClose(); });
+  document.body.appendChild(el);
+  return el;
+}
+function lbRender(){
+  var p=document.getElementById("lbpanel");
+  if(!p) return;
+  var h='<h2>'+esc(t("ui.lb"))+'</h2><p class="tick">'+esc(t("ui.lb.sub"))+'</p>';
+  if(!LB_STATE.on){
+    h+='<p class="tick">'+esc(t("ui.lb.offline"))+'</p>';
+  } else if(LB_STATE.busy && !LB_STATE.list){
+    h+='<p class="tick">'+esc(t("ui.lb.loading"))+'</p>';
+  } else if(LB_STATE.err && !LB_STATE.list){
+    h+='<p class="tick">'+esc(t("ui.lb.err"))+'</p>';
+  } else {
+    var list=LB_STATE.list||[];
+    if(!list.length){
+      h+='<p class="tick">'+esc(t("ui.lb.empty"))+'</p>';
+    } else {
+      h+='<table class="lbtable"><thead><tr>'
+        +'<th class="r">'+esc(t("ui.lb.rank"))+'</th>'
+        +'<th>'+esc(t("ui.lb.who"))+'</th>'
+        +'<th>'+esc(t("ui.lb.ending"))+'</th>'
+        +'<th class="s">'+esc(t("ui.lb.pts"))+'</th>'
+        +'<th class="s">'+esc(t("ui.time"))+'</th></tr></thead><tbody>';
+      for(var i=0;i<list.length;i++){
+        var r=list[i];
+        /* Two different claims, shown as two different things. A row nobody
+           has arrived through is 暂定 and says so; it is not hidden, because
+           hiding it would make the gate feel like a punishment rather than a
+           step, and it is not dressed up as confirmed either. */
+        var chip = (r.h>0)
+          ? '<span class="lbchip ok">'+esc(t("ui.lb.brought",{n:r.h}))+'</span>'
+          : '<span class="lbchip">'+esc(t("ui.lb.pending"))+'</span>';
+        h+='<tr'+(LB_STATE.rank&&r.rank===LB_STATE.rank?' class="me"':'')+'>'
+          +'<td class="r">'+r.rank+'</td>'
+          +'<td class="n">'+esc(r.n||t("ui.lb.anon"))+chip+'</td>'
+          +'<td class="en">'+esc(t("e."+r.e))+'</td>'
+          +'<td class="s">'+r.s+'</td>'
+          +'<td class="s">'+esc(fmtTime(r.t))+'</td></tr>';
+      }
+      h+='</tbody></table><p class="tick">'+esc(t("ui.lb.total",{n:LB_STATE.total}))+'</p>';
+    }
+  }
+  h+='<div class="row"><button class="btn ghost" id="lbclose" type="button">'
+    +esc(t("ui.lb.close"))+'</button></div>';
+  p.innerHTML=h;
+  var c=document.getElementById("lbclose");
+  if(c) c.onclick=lbClose;
+}
+function lbKey(ev){ if(ev.key==="Escape") lbClose(); }
+function lbOpen(){
+  lbPanel();
+  document.body.style.overflow="hidden";
+  document.addEventListener("keydown",lbKey);
+  lbRender();
+  if(LB_STATE.on && !LB_STATE.list && !LB_STATE.busy) lbLoad();
+}
+function lbClose(){
+  var el=document.getElementById("lbwrap");
+  if(el && el.parentNode) el.parentNode.removeChild(el);
+  document.body.style.overflow="";
+  document.removeEventListener("keydown",lbKey);
+}
+function lbLoad(){
+  LB_STATE.busy=true; LB_STATE.err=null;
+  lbFetch("top.php?n=50&pid="+encodeURIComponent(lbPid()),null)
+   .then(function(r){
+      LB_STATE.busy=false;
+      if(!r||!r.ok){ LB_STATE.err="server"; }
+      else {
+        LB_STATE.list=r.list||[]; LB_STATE.total=r.total||0;
+        LB_STATE.rank=(r.you&&r.you.rank)?r.you.rank:null;
+        LB_STATE.meH=(r.you&&typeof r.you.h==="number")?r.you.h:null;
+      }
+      lbRender();
+      /* the ending screen is still on screen behind the board; if the board
+         just told us somebody arrived, say so there too rather than making the
+         player close the board to find out */
+      lbRefreshFinal();
+   },function(){ LB_STATE.busy=false; LB_STATE.err="net"; lbRender(); });
+}
+/* --------------------------------------------------------------------------
+   THE GATE
+   --------------------------------------------------------------------------
+   Tapping 上榜 does not submit. It mints a token, puts that token into the
+   link, and opens the share route. The submit happens only when the share
+   surface reports that the player took a route out of it — and the token is
+   what lets a later arrival be counted, which is the only part of this that
+   is actually measured rather than claimed.
+
+   If the player backs out, nothing is submitted and they are told why, in the
+   same place, with the button live again. If no share surface can be shown at
+   all, the gate is skipped: the row goes up 暂定 and can never be 转正, which
+   is the honest outcome for a browser that cannot share.
+   -------------------------------------------------------------------------- */
+function lbSubmit(e,btn){
+  if(LB_STATE.busy) return;
+  var inp=document.getElementById("lbname"), msg=document.getElementById("lbmsg");
+  var name=inp?inp.value:"";
+  lbSaveName(name);
+
+  var tok=lbTok(), done=false;
+  LB_SHARE={ tok:tok, url:GAMEURL+"?c="+tok, onShared:null, onClose:null, onCancel:null };
+
+  function finish(){
+    if(done) return; done=true; LB_SHARE=null;
+    lbPost(e,name,tok,btn,msg);
+  }
+  function gaveup(){
+    if(done) return; done=true; LB_SHARE=null;
+    if(msg) msg.textContent=t("ui.lb.noshare");
+    if(btn) btn.disabled=false;
+  }
+  LB_SHARE.onShared=finish;
+  LB_SHARE.onClose=gaveup;
+  LB_SHARE.onCancel=gaveup;
+
+  if(btn) btn.disabled=true;
+  if(msg) msg.textContent=t("ui.lb.gate");
+  if(!shareNow(e,true)) finish();
+}
+
+function lbPost(e,name,tok,btn,msg){
+  LB_STATE.busy=true;
+  if(btn) btn.disabled=true;
+  if(msg) msg.textContent=t("ui.lb.sending");
+  lbFetch("submit.php",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({pid:lbPid(),n:name,e:e,res:lbRes(S),sec:lbSec(S),
+                         l:LANG,v:lbVer(),tok:tok})
+  }).then(function(r){
+    LB_STATE.busy=false;
+    if(!r||!r.ok){ if(msg) msg.textContent=t("ui.lb.err"); if(btn) btn.disabled=false; return; }
+    /* The server drops a token it could not keep (malformed, or already in
+       use). It answers with the token it actually stored, so an empty one
+       here means the row is on the board but can never be promoted. */
+    S.lbSent={rank:r.rank,total:r.total,tok:r.tok||""}; save();
+    lbSentUI();
+    LB_STATE.list=null; LB_STATE.rank=r.rank;
+    if(document.getElementById("lbwrap")) lbLoad();
+  },function(){
+    LB_STATE.busy=false;
+    if(msg) msg.textContent=t("ui.lb.err");
+    if(btn) btn.disabled=false;
+  });
+}
+
+/* Updated in place rather than by re-rendering: the player is at the bottom of
+   a long page, and a re-render would throw them back to the top to look for
+   the answer they just asked for. */
+function lbSentUI(){
+  var slot=document.getElementById("lbslot");
+  if(slot) slot.innerHTML=lbSlot();
+  lbFinalWire(currentEnding());
+}
+
+/* The block that appears on the ending screen. It is the only place a player
+   has a score, so it is the only place the score is offered for submission.
+   The part that changes state lives in its own slot, so a submit can swap the
+   form for the result without re-rendering the score above it — and without
+   moving the player, who is at the bottom of a long page. */
+function lbFinalCard(e){
+  var h='<div class="hr"></div><div class="card lbcard">'
+    +'<div class="kicker">'+esc(t("ui.lb"))+'</div>';
+  if(!LB_STATE.on){
+    return h+'<p class="tick">'+esc(t("ui.lb.offline"))+'</p></div>';
+  }
+  h+='<div class="lbscore"><b>'+lbScore(e,S)+'</b><small>'+esc(t("ui.lb.pts"))+'</small></div>'
+    +'<div class="lbtier">'+esc(t("e."+e))+' · '+esc(t("ui.lb.res"))+' '+lbRes(S)
+    +' · '+esc(fmtTime(lbSec(S)))+'</div>'
+    +'<div id="lbslot">'+lbSlot()+'</div>'
+    +'<div class="row"><button class="btn ghost" id="lbtop" type="button">'
+    +esc(t("ui.lb.top"))+'</button></div>'
+    +'<p class="tick lbnote">'+esc(t("ui.lb.note"))+'</p></div>';
+  return h;
+}
+
+/* the half of the block that changes: the form, or the result of the gate */
+function lbSlot(){
+  if(S.lbSent){
+    var h='<p class="tick" id="lbmsg">'
+      +esc(t("ui.lb.ranked",{r:S.lbSent.rank,n:S.lbSent.total}))+'</p>'
+      +'<p class="tick lbnote" id="lbrank">'+esc(t("ui.lb.ranknote"))+'</p>';
+    /* Only worth offering if a token was actually kept. A row without one can
+       never be promoted, and a button that copies a link which cannot do
+       anything is worse than no button. */
+    if(S.lbSent.tok){
+      h+='<div class="lbform"><button class="btn ghost" id="lbcopy" type="button">'
+        +esc(t("ui.lb.copylink"))+'</button></div><p class="tick" id="lbmsg2"></p>';
+    }
+    return h;
+  }
+  return '<div class="lbform">'
+    +'<input type="text" id="lbname" maxlength="16" autocomplete="nickname" '
+    +'placeholder="'+esc(t("ui.lb.name"))+'" value="'+esc(lbName())+'">'
+    +'<button class="btn" id="lbsub" type="button">'+esc(t("ui.lb.submit"))+'</button>'
+    +'</div><p class="tick" id="lbmsg"></p>'
+    +'<p class="tick lbnote">'+esc(t("ui.lb.gate"))+'</p>';
+}
+
+function lbFinalWire(e){
+  var s=document.getElementById("lbsub");
+  if(s) s.onclick=function(){ lbSubmit(e,s); };
+  var c=document.getElementById("lbcopy");
+  if(c) c.onclick=lbCopyLink;
+  var b=document.getElementById("lbtop");
+  if(b) b.onclick=lbOpen;
+}
+
+function lbLinkURL(){
+  return (S && S.lbSent && S.lbSent.tok) ? (GAMEURL+"?c="+S.lbSent.tok) : GAMEURL;
+}
+function lbCopyLink(){
+  var msg=document.getElementById("lbmsg2");
+  TRICARD.copy(lbLinkURL(),
+    function(){ if(msg) msg.textContent=t("ui.lb.copied"); },
+    function(){ if(msg) msg.textContent=t("ui.lb.copybad"); });
+}
+
+/* Called after the board is read. The player is looking at the ending screen,
+   not at the board — so if the board has just learned that somebody arrived
+   through their link, say it here rather than making them open the board to
+   find out that their row stopped being 暂定. */
+function lbRefreshFinal(){
+  if(!S || !S.lbSent || typeof LB_STATE.meH!=="number") return;
+  if(LB_STATE.meH<=0 || S.lbSent.h===LB_STATE.meH) return;
+  S.lbSent.h=LB_STATE.meH; save();
+  var el=document.getElementById("lbrank");
+  if(!el) return;
+  el.textContent=t("ui.lb.promoted");
+  el.className="tick lbnote ok";
+}
+
+/* ?c=<token> means somebody arrived through a shared link, and this is the
+   only half of the loop that can be observed. Reported from JavaScript and
+   never from the page load itself: WhatsApp and Telegram fetch a link to build
+   a preview card, that fetch is a GET which runs no script, and counting it
+   would turn every paste into a visitor. */
+function lbHitCheck(){
+  if(!LB_STATE.on) return;
+  var m=/[?&]c=([a-z0-9]{8,32})(?:&|$)/.exec(location.search);
+  if(!m) return;
+  var tok=m[1];
+  try{
+    if(sessionStorage.getItem("sunzi_hit")===tok) return;
+    sessionStorage.setItem("sunzi_hit",tok);
+  }catch(e){}
+  lbFetch("hit.php",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({c:tok,pid:lbPid()})
+  },6000).then(function(r){
+    if(!r||!r.ok) return;
+    /* The token has done its work. Leaving it in the address bar would make
+       every later share of this page carry somebody else's token. */
+    try{ history.replaceState(null,"",location.pathname+location.hash); }catch(e){}
+  },function(){});
+}
+
+function currentEnding(){
+  try{ if(S && S.lines && S.lines.length) return ending(); }catch(err){}
+  return null;
+}
+
+/* ---------- 顶栏的榜钮 ---------- */
+(function(){
+  var b=document.getElementById("lbbtn");
+  if(!b) return;
+  b.onclick=lbOpen;
+})();
+
+/* A visitor arriving through somebody's shared link reports the arrival once,
+   here, from script — see lbHitCheck(). */
+lbHitCheck();
+
+/* Read-only view for the harness. The two score rules live in two languages,
+   so the only way to know they agree is to be able to ask both. */
+window.__lb=function(){
+  var e=null;
+  try{ if(S && S.lines && S.lines.length) e=ending(); }catch(err){ e=null; }
+  return {on:LB_STATE.on,ending:e,res:S?lbRes(S):0,sec:S?lbSec(S):0,
+          score:S?lbScore(e,S):0,pid:lbPid()};
+};
 
 /* ---------- 启动 ---------- */
 document.documentElement.lang=(LANG==="en")?"en":(LANG==="trad"?"zh-Hant":"zh-Hans");
@@ -2310,6 +2890,20 @@ var TRISHARE = (function () {
     var shareTitle = opts.shareTitle || say('title');
     var fname = opts.filename || 'trilumi-card.png';
     var blob = opts.blob || null;
+    /* The sheet is the only place a share can be observed at all, and even
+       here it can only be observed as "the player took a route out" — not as
+       "something was posted". onShared fires on every route that leaves the
+       page with the content (native sheet, a target link, copy). onClose fires
+       when the sheet goes away without one, which is how the caller learns
+       that nothing happened. Both are optional; every other game ignores them. */
+    var onShared = opts.onShared || null;
+    var onClose  = opts.onClose  || null;
+    var shared = false;
+    function markShared() {
+      if (shared) return;
+      shared = true;
+      if (onShared) { try { onShared(); } catch (e) {} }
+    }
 
     var m = document.createElement('div');
     m.className = 'trish';
@@ -2361,9 +2955,9 @@ var TRISHARE = (function () {
       }
       try {
         if (f && navigator.canShare && navigator.canShare({ files: [f] })) {
-          navigator.share({ files: [f], title: shareTitle, text: txt }).catch(refused);
+          navigator.share({ files: [f], title: shareTitle, text: txt }).then(markShared, refused);
         } else if (navigator.share) {
-          navigator.share({ title: shareTitle, text: txt, url: game }).catch(refused);
+          navigator.share({ title: shareTitle, text: txt, url: game }).then(markShared, refused);
         } else {
           note(say('sharebad'), true);
         }
@@ -2405,6 +2999,10 @@ var TRISHARE = (function () {
         a.target = '_blank';
         a.rel = 'noopener';
         a.textContent = say(targets[i][0]);
+        /* a target link is the fallback route on a desktop that has no usable
+           system sheet. It proves nothing — the player can close the tab it
+           opens — but it is a route out, which is all this sheet can report. */
+        a.onclick = markShared;
         tgs.appendChild(a);
       }
       box.appendChild(tgs);
@@ -2414,7 +3012,8 @@ var TRISHARE = (function () {
     var acts2 = el('div', 'acts2');
     var cp = el('button', null, say('cp'));
     cp.onclick = function () {
-      TRICARD.copy(txt, function () { note(say('ok')); }, function () { note(say('bad'), true); });
+      TRICARD.copy(txt, function () { note(say('ok')); markShared(); },
+                        function () { note(say('bad'), true); });
     };
     var cl = el('button', null, say('cl'));
     cl.onclick = function () { close(); };
@@ -2429,6 +3028,10 @@ var TRISHARE = (function () {
     function close() {
       document.removeEventListener('keydown', onKey);
       m.remove();
+      /* closed without taking any route out. The caller needs to know, or the
+         player is left staring at a button that did nothing and cannot tell
+         whether they are on the board. */
+      if (!shared && onClose) { try { onClose(); } catch (e) {} }
     }
 
     document.body.appendChild(m);

@@ -1,6 +1,6 @@
 /* 「发明」孙子兵法 · 十三篇 — service worker
    内容有任何改动都要把 VERSION 加一，否则老访客拿到的是旧缓存。 */
-const VERSION = "sunzi-v4";
+const VERSION = "sunzi-v9";
 const SHELL = [
   "./","./index.html","./manifest.webmanifest",
   "./icons/icon-192.png","./icons/icon-512.png",
@@ -17,6 +17,9 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
+  // 兵法榜是活数据，不是外壳资源。cache-first 会把访客第一次看到的榜永久钉住，
+  // 之后每次打开都像坏了。它也绝不能进 SHELL —— 那会把榜单在安装时快照一次。
+  if (new URL(req.url).pathname.indexOf("/_lb/") === 0) return;
   if (req.mode === "navigate") {
     // 导航：network-first，更新能落地；断网回落缓存。
     // 但 network-first 不等于最新：fetch() 默认走 HTTP 缓存，而服务端没有
